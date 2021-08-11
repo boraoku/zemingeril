@@ -21,10 +21,14 @@
   <ItemGroup>
     <ClInclude Include="CImg.h" />
     <ClInclude Include="kaynak_ZEMiNGeRiL_v05.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="zemingeril.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
