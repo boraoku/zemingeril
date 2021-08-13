@@ -677,15 +677,14 @@ void sondaj_cizim()
      while (!disp.is_closed())
      {
          //y koordinati gore gerilme degerini goster
-         /*if (disp.mousey <= B.x + zL && disp.mousey >= B.x)
+         if (disp.mouse_y() <= B.x + zL && disp.mouse_y() >= B.x)
          {
-             int i=disp.mousey-B.x;
+             int i = disp.mouse_y() - B.x;
              double derinlik = (i * sondaj_z / zL);
              img.draw_rectangle((Lego + 100),(B.x-18),B.y,(B.x-5),beyaz);
              //cout << derinlik << " " << hesap_sdj[i] << "\n";
              img.draw_text((Lego + 100),(B.x-18), "| Depth: %4.2f meters , Stress increment %4.2f kPa |", kirmizi, 0, 1, 13, derinlik, hesap_sdj[i]);
          }
-         */
          
          //goruntuyu ciz
          disp.display(img);
