@@ -452,7 +452,7 @@ void IIIB_cizim()
      {
              //degeri yaz
              Lger=Qrol * (i-1) / 10;
-             //img.draw_text(0, (BL.y-5),siyah,NULL,1,"%4.2f",Lger);
+             img.draw_text(0, (BL.y - 5), "%4.2f", siyah, 0, 1, 13, Lger);
 
              //kareyi ciz
              for(int xx=0; xx!=11; ++xx)
@@ -607,10 +607,10 @@ void sondaj_cizim()
 
 
      //z etiketi, z ekseni icin
-     //img.draw_text((Lego + B.y),(B.x-18),siyah,NULL,1,"Z, meters");
+     img.draw_text((Lego + B.y), (B.x-18), "Z, meters", siyah, 0, 1, 13);
 
      //gerilme etiketi, gerilme ekseni icin
-     //img.draw_text((Lego - 20),(B.x-18),siyah,NULL,1,"Stress, kPa");
+     img.draw_text((Lego - 20), (B.x-18), "Stress, kPa", siyah, 0, 1, 13);
 
      double zp=0;
      //z eksenini derecelendir
@@ -623,10 +623,10 @@ void sondaj_cizim()
              }    
 
              //derinlik degerini yaz
-             //img.draw_text((Lego + B.y+8),i-5,siyah,NULL,1,"%4.2f",zp);
+             img.draw_text((Lego + B.y+8), i-5, "%4.2f", siyah, 0, 1, 13, zp);
 
              //gerilme degerini yaz
-             //img.draw_text((Lego+8),i-5,siyah,NULL,1,"%4.2f",hesap_sdj[i-B.x]);
+             img.draw_text((Lego+8), i-5, "%4.2f", siyah, 0, 1, 13, hesap_sdj[i-B.x]);
 
              zp+=sondaj_z/20;
      }
@@ -635,10 +635,10 @@ void sondaj_cizim()
      img.draw_line((Lego + A.y),A.x,(Lego + A.y),(B.x+zL),gri,-1,1);
 
      //maksimum gerilme miktari ve yerini yaz
-     //img.draw_text((Lego + 50), (A.x + zL + 20),kirmizi,NULL,1,"%4.2f kPa of Maximum Stress occured at %4.2f meters depth.",sondaj_Smax,sondaj_zmax);
+     img.draw_text((Lego + 50), (A.x + zL + 20), "%4.2f kPa of Maximum Stress occured at %4.2f meters depth.", kirmizi,0 , 1, 13, sondaj_Smax,sondaj_zmax);
      
      //sondaj koordinatini belirt 
-     //img.draw_text((Lego + 50), (A.x + zL + 30),kirmizi,NULL,1,"Coordinates of Boring are X= %4.2f meter and Y= %4.2f meter.",sondaj_nokta.x,sondaj_nokta.y);
+     img.draw_text((Lego + 50), (A.x + zL + 30), "Coordinates of Boring are X= %4.2f meter and Y= %4.2f meter.", kirmizi, 0, 1, 13, sondaj_nokta.x,sondaj_nokta.y);
 
      //legend ciz
      //legend(sondaj_Smax); yerine..
@@ -654,7 +654,7 @@ void sondaj_cizim()
      {
              //degeri yaz
              Lger=Qrol * (i-1) / 10;
-             //img.draw_text(0, (BL.y-5),siyah,NULL,1,"%4.2f",Lger);         
+             img.draw_text(0, (BL.y-5), "%4.2f", siyah, 0, 1, 13, Lger);
              
              //kareyi ciz
              for(int xx=0; xx!=11; ++xx)
@@ -683,7 +683,7 @@ void sondaj_cizim()
              double derinlik = (i * sondaj_z / zL);
              img.draw_rectangle((Lego + 100),(B.x-18),B.y,(B.x-5),beyaz);
              //cout << derinlik << " " << hesap_sdj[i] << "\n";
-             //img.draw_text((Lego + 100),(B.x-18),kirmizi,NULL,1,"| Depth: %4.2f meters , Stress increment %4.2f kPa |",derinlik,hesap_sdj[i]);
+             img.draw_text((Lego + 100),(B.x-18), "| Depth: %4.2f meters , Stress increment %4.2f kPa |", kirmizi, 0, 1, 13, derinlik, hesap_sdj[i]);
          }
          */
          
