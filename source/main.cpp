@@ -227,7 +227,7 @@ void IIIB_hesap()
                      yuzde=( (j-1) * ( Lx * oran_c ) + i) * 100 / ( Lx * Ly * oran_c * oran_c);
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > (yuzdee) ) {
-                     	sprintf_s(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                     	sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                      	//sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
                      	cout << "\b\b\b\b\b"; //silmece
                      	cout << say; //yazmaca
@@ -278,7 +278,7 @@ void IIIB_hesap()
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > yuzdee) 
                      {
-                         sprintf_s(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                         sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                      	 //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
                      	 cout << "\b\b\b\b\b"; //silmece
                      	 cout << say; //yazmaca
@@ -328,7 +328,7 @@ void IIIB_hesap()
                      yuzde=( (j-1) * ( Ly * oran_c ) + i) * 100 / ( Lz * Ly * oran_c * oran_c);
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > yuzdee) {
-                     	sprintf_s(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                     	sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                      	//sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
                      	cout << "\b\b\b\b\b"; //silmece
                      	cout << say; //yazmaca
@@ -496,7 +496,7 @@ void sondaj_hesap()
 
      //dosya ciktisi icin
      ofstream outfile ("cikti_ZG.txt",ofstream::binary);
-     outfile << setiosflags (ios_base::fixed);
+     outfile << std::setiosflags (ios_base::fixed);
      outfile << setw (10) << setprecision (5);
 
      cout << "\nEnter X and Y coordinates of stress boring (meters, decimal): ";
@@ -518,7 +518,7 @@ void sondaj_hesap()
           yuzde=derinlik * 100 / sondaj_z;
           if (yuzde < 0 ) { yuzde=0; }
           if (yuzde > yuzdee) {
-               	sprintf_s(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+               	sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                	//sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
                	cout << "\b\b\b\b\b"; //silmece
                	cout << say; //yazmaca
@@ -726,6 +726,14 @@ int main( int argc, char **argv )
       sondaj_cizim();
      }
     
-    system("pause");
+    #ifdef _WIN32
+    //windows
+    system("pause")
+    #else
+    //linux or mac
+    system("echo 'Press ENTER to exit or wait for 5 seconds.....'");
+    system("read -t5");
+    #endif
+
     return 0;
 }
