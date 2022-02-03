@@ -363,4 +363,8 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Zemingeril output files
-ZeminGeril/ZeminGeril/cikti_ZG.txt
+cikti_ZG.txt
+
+# System files
+.DS_Store
+thumbs.db 
