@@ -14,7 +14,7 @@ Compiling & Running
 -----------------------------------------------------------
 For Linux / Mac environment, simply use the makefile by
 ```bash
-cd Source
+cd source
 make
 ```
 
@@ -25,4 +25,4 @@ And then run the compiled code:
 
 For Windows, just use the provided VS file `ZeminGeril.sln` to compile. 
 
-There are some compiled files under `Build` folder. Windows EXE file will require [Microsoft Visual C++ Redistributable](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) runtime files installed on the system.
+There are some compiled files under `build` folder. Windows EXE file will require [Microsoft Visual C++ Redistributable](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) runtime files installed on the system.
