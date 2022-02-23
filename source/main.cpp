@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <cmath>
 #include <fstream>
+#include <thread>
 
 using std::cin;                 
 using std::cout;
@@ -58,6 +59,8 @@ double Foundation::Stress_Element(element _e, coordinate _nokta, double _z)
         return _e.Q * If_arch(_e.alfa, _e.L1, _e.center, _nokta, _z);
     break;
     }    
+
+    return 0;
 }
 
 //Stress Increment at any point of the Soil caused by Foundation
@@ -162,6 +165,189 @@ double toplam_mesafe; //hesap dogrultusunun uzunlugu
 
 
 //3Boyut
+void III_hesapXY(double z, double xx, double yy)
+{
+          coordinate nokta;
+          double Qnokta=0;
+          int ekranx, ekrany;
+          color_RGB renk;
+          char say[256];
+          double yuzde, yuzdee;
+          yuzde=0;
+          yuzdee=0;
+          pixel gecici;
+
+          //cizim icin
+          Ox=400;//ekranin orta koordinatlari Ox Oy
+          Oy=300;
+          const double aci=(3.141592654)/9;
+
+          for (int j=0; j!=( Ly*oran_c + 1); ++j)
+          {
+
+                for (int i=0; i!=( Lx*oran_c + 1 ); ++i)
+                {
+                     nokta.x=xx;
+                     nokta.y=yy;
+
+                     //hesap kismi
+                     Qnokta=ZG.Stress(nokta, z);
+
+                     ekranx=Ox + i*cos(aci) - j*cos(aci);
+                     ekrany=Oy - j*sin(aci) - i*sin(aci);
+
+
+                     //ilemin yuzde kacnn tamamlandigin yazdr
+                     yuzde=( (j-1) * ( Lx * oran_c ) + i) * 100 / ( Lx * Ly * oran_c * oran_c);
+                     if (yuzde < 0 ) { yuzde=0; }
+                     if (yuzde > (yuzdee) ) {
+                        sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                        //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
+                        cout << "\b\b\b\b\b"; //silmece
+                        cout << say; //yazmaca
+                        cout << " %";
+                        yuzdee=yuzde;
+                     }
+
+                     //etki faktorlerini renklerle ifade et
+                     renk=color_calc(Qnokta,QQ);
+
+                     gecici.x=ekranx;
+                     gecici.y=ekrany;
+                     gecici.r=renk;
+                     hesap.push_back(gecici);
+             
+                     xx = xx + oran_ct;
+             
+                }         
+
+                xx = Ax;
+                yy = yy + oran_ct;
+          }        
+}
+
+void III_hesapXZ(double y, double xx, double zz)
+{
+          coordinate nokta;
+          double Qnokta=0;
+          int ekranx, ekrany;
+          color_RGB renk;
+          char say[256];
+          double yuzde, yuzdee;
+          yuzde=0;
+          yuzdee=0;
+          pixel gecici;
+
+          nokta.y=y;
+
+          //cizim icin
+          Ox=400;//ekranin orta koordinatlari Ox Oy
+          Oy=300;
+          const double aci=(3.141592654)/9;
+
+          for (int j=0; j!=( Lz*oran_c + 1); ++j)
+          {
+
+                     for (int i=0; i!=( Lx*oran_c + 1); ++i)
+                     {
+                     nokta.x=xx;
+
+                     //hesap kismi
+                     Qnokta=ZG.Stress(nokta, zz);
+                     
+                     ekranx=Ox + i*cos(aci);
+                     ekrany=Oy + j - i*sin(aci);
+
+                      //ilemin yuzde kacnn tamamland�n yazdr
+                     yuzde=( (j-1) * ( Lx * oran_c ) + i) * 100 / ( Lz * Lx * oran_c * oran_c );
+                     if (yuzde < 0 ) { yuzde=0; }
+                     if (yuzde > yuzdee) 
+                     {
+                         sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                         //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
+                         cout << "\b\b\b\b\b"; //silmece
+                         cout << say; //yazmaca
+                         cout << " %";
+                         yuzdee=yuzde;
+                     }
+
+                     //etki faktorlerini renklerle ifade et
+                     renk=color_calc(Qnokta,QQ);
+
+                     gecici.x=ekranx;
+                     gecici.y=ekrany;
+                     gecici.r=renk;
+                     hesap.push_back(gecici);
+             
+                     xx = xx + oran_ct;
+             
+                     }
+                     
+          xx = Ax;
+          zz = zz + oran_ct;
+          }
+}
+
+void III_hesapYZ(double x, double yy, double zz)
+{
+          coordinate nokta;
+          double Qnokta=0;
+          int ekranx, ekrany;
+          color_RGB renk;
+          char say[256];
+          double yuzde, yuzdee;
+          yuzde=0;
+          yuzdee=0;
+          pixel gecici;
+
+          nokta.x=x;
+
+          //cizim icin
+          Ox=400;//ekranin orta koordinatlari Ox Oy
+          Oy=300;
+          const double aci=(3.141592654)/9;
+
+          for (int j=0; j!=( Lz*oran_c + 1); ++j)
+          {
+
+                     for (int i=0; i!=( Ly*oran_c + 1); ++i)
+                     {
+                     nokta.y=yy;
+
+                     //hesap kismi
+                     Qnokta=ZG.Stress(nokta, zz);
+
+                     ekranx=Ox - i*cos(aci);
+                     ekrany=Oy + j - i*sin(aci);
+
+                     //ilemin yuzde kacnn tamamland�n yazdr
+                     yuzde=( (j-1) * ( Ly * oran_c ) + i) * 100 / ( Lz * Ly * oran_c * oran_c);
+                     if (yuzde < 0 ) { yuzde=0; }
+                     if (yuzde > yuzdee) {
+                        sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                        //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
+                        cout << "\b\b\b\b\b"; //silmece
+                        cout << say; //yazmaca
+                        cout << " %";
+                        yuzdee=yuzde;
+                     }
+
+                     //etki faktorlerini renklerle ifade et
+                     renk=color_calc(Qnokta,QQ);
+
+                     gecici.x=ekranx;
+                     gecici.y=ekrany;
+                     gecici.r=renk;
+                     hesap.push_back(gecici);
+             
+                     yy = yy + oran_ct;
+                     
+                     }
+                                          
+          yy = Ay;
+          zz = zz + oran_ct;
+          }
+}
 	  
 void IIIB_hesap()
 {
@@ -184,175 +370,21 @@ void IIIB_hesap()
           cin >> oran_c;
 
           oran_ct=1/oran_c;
-          //gerekli degiskenler
-          coordinate nokta;
-          double Qnokta=0;
-          double z, xx, yy, zz;
-          int ekranx, ekrany;
-          color_RGB renk;
-          char say[256];
-          double yuzde, yuzdee;
-	      pixel gecici;
-
-          //cizim icin
-          Ox=400;//ekranin orta koordinatlari Ox Oy
-          Oy=300;
-          const double aci=(3.141592654)/9;
 
           cout << "\nSurface 1 of 3::calculated 000 %";
-	      yuzde=0;
-	      yuzdee=0;
 
           //1.yuzey
-          z=Az;
-          xx=Ax;
-          yy=Ay;
+          III_hesapXY(Az, Ax, Ay);
 
-          for (int j=0; j!=( Ly*oran_c + 1); ++j)
-          {
-
-                     for (int i=0; i!=( Lx*oran_c + 1 ); ++i)
-                     {
-                     nokta.x=xx;
-                     nokta.y=yy;
-
-                     //hesap kismi
-                     Qnokta=ZG.Stress(nokta, z);
-
-                     ekranx=Ox + i*cos(aci) - j*cos(aci);
-                     ekrany=Oy - j*sin(aci) - i*sin(aci);
-
-
-                     //ilemin yuzde kacnn tamamlandigin yazdr
-                     yuzde=( (j-1) * ( Lx * oran_c ) + i) * 100 / ( Lx * Ly * oran_c * oran_c);
-                     if (yuzde < 0 ) { yuzde=0; }
-                     if (yuzde > (yuzdee) ) {
-                     	sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
-                     	//sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
-                     	cout << "\b\b\b\b\b"; //silmece
-                     	cout << say; //yazmaca
-                     	cout << " %";
-                     	yuzdee=yuzde;
-                     }
-
-                     //etki faktorlerini renklerle ifade et
-                     renk=color_calc(Qnokta,QQ);
-
-                     gecici.x=ekranx;
-                     gecici.y=ekrany;
-                     gecici.r=renk;
-                     hesap.push_back(gecici);
-		     
-		             xx = xx + oran_ct;
-		     
-                     }         
-
-          xx = Ax;
-          yy = yy + oran_ct;
-          }
-
-	      cout << "\nSurface 2 of 3::calculated 000 %";
-	      yuzde=0;
-	      yuzdee=0;
-	  
           //2.yuzey
-          nokta.y=Ay;
-          xx=Ax;
-          zz=Az;
+	      cout << "\nSurface 2 of 3::calculated 000 %";
+	      III_hesapXZ(Ay, Ax, Az);
 
-          for (int j=0; j!=( Lz*oran_c + 1); ++j)
-          {
-
-                     for (int i=0; i!=( Lx*oran_c + 1); ++i)
-                     {
-                     nokta.x=xx;
-
-                     //hesap kismi
-                     Qnokta=ZG.Stress(nokta, zz);
-                     
-                     ekranx=Ox + i*cos(aci);
-                     ekrany=Oy + j - i*sin(aci);
-
-                      //ilemin yuzde kacnn tamamland�n yazdr
-                     yuzde=( (j-1) * ( Lx * oran_c ) + i) * 100 / ( Lz * Lx * oran_c * oran_c );
-                     if (yuzde < 0 ) { yuzde=0; }
-                     if (yuzde > yuzdee) 
-                     {
-                         sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
-                     	 //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
-                     	 cout << "\b\b\b\b\b"; //silmece
-                     	 cout << say; //yazmaca
-                     	 cout << " %";
-                     	 yuzdee=yuzde;
-                     }
-
-                     //etki faktorlerini renklerle ifade et
-                     renk=color_calc(Qnokta,QQ);
-
-                     gecici.x=ekranx;
-                     gecici.y=ekrany;
-                     gecici.r=renk;
-                     hesap.push_back(gecici);
-		     
-		             xx = xx + oran_ct;
-		     
-                     }
-                     
-          xx = Ax;
-          zz = zz + oran_ct;
-          }
-
+          //3.yuzey  
 	      cout << "\nSurface 3 of 3::calculated 000 %";
-	      yuzde=0;
-	      yuzdee=0;
+          III_hesapYZ(Ax, Ay, Az);
 	  
-          //3.yuzey
-          nokta.x=Ax;
-          yy=Ay;
-          zz=Az;
-
-          for (int j=0; j!=( Lz*oran_c + 1); ++j)
-          {
-
-                     for (int i=0; i!=( Ly*oran_c + 1); ++i)
-                     {
-                     nokta.y=yy;
-
-                     //hesap kismi
-                     Qnokta=ZG.Stress(nokta, zz);
-
-                     ekranx=Ox - i*cos(aci);
-                     ekrany=Oy + j - i*sin(aci);
-
-                     //ilemin yuzde kacnn tamamland�n yazdr
-                     yuzde=( (j-1) * ( Ly * oran_c ) + i) * 100 / ( Lz * Ly * oran_c * oran_c);
-                     if (yuzde < 0 ) { yuzde=0; }
-                     if (yuzde > yuzdee) {
-                     	sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
-                     	//sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
-                     	cout << "\b\b\b\b\b"; //silmece
-                     	cout << say; //yazmaca
-                     	cout << " %";
-                     	yuzdee=yuzde;
-                     }
-
-                     //etki faktorlerini renklerle ifade et
-                     renk=color_calc(Qnokta,QQ);
-
-                     gecici.x=ekranx;
-                     gecici.y=ekrany;
-                     gecici.r=renk;
-                     hesap.push_back(gecici);
-		     
-		             yy = yy + oran_ct;
-                     
-                     }
-                                          
-          yy = Ay;
-          zz = zz + oran_ct;
-          }
-	  
-	  cout << "\n";
+          cout << "\n";
 }
 
 void IIIB_cizim()
@@ -412,7 +444,7 @@ void IIIB_cizim()
       //her metrede bir cizgi
       for (int i=0; i<=(Lz*oran_c); i+=oran_c)
       {
-       if (a==5) { img.draw_line(c1,c2+i,c3,c4+i,siyah,-1,0.50); a=0;} else { img.draw_line(c1,c2+i,c3,c4+i,gri,-1,0.35); }
+       if (a==5) { img.draw_line(c1,c2+i,c3,c4+i,siyah,0.50); a=0;} else { img.draw_line(c1,c2+i,c3,c4+i,gri,0.35); }
        ++a;
       }
       a=0;
@@ -425,7 +457,7 @@ void IIIB_cizim()
       //her metrede bir cizgi
       for (int i=0; i<=(Lz*oran_c); i+=oran_c)
       {
-       if (a==5) { img.draw_line(c1,c2+i,c3,c4+i,siyah,-1,0.50); a=0;} else { img.draw_line(c1,c2+i,c3,c4+i,gri,-1,0.35); }
+       if (a==5) { img.draw_line(c1,c2+i,c3,c4+i,siyah,0.50); a=0;} else { img.draw_line(c1,c2+i,c3,c4+i,gri,0.35); }
        ++a;
       }
       a=0;

@@ -81,6 +81,8 @@ color_RGB color_calc(double Qh, double Qt)
     
     if (fabs(Qoran-0.1)<tolerans)          
     { gecici.deger[0]=color_skala[30]; gecici.deger[1]=color_skala[31]; gecici.deger[2]=color_skala[32]; return gecici; }
+
+    return gecici;
 }
 
 //Specifications of a Foundation compiled as an Element(FOR INPUT PURPOSE)
