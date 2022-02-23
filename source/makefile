@@ -12,5 +12,5 @@ BUILDPATH="../build/"
 # Targets needed to bring the executable up to date
  
 main:
-	$(CC) $(CPPFLAGS) main.cpp -L /opt/X11/lib -lX11 -o $(PRGNAME) 
+	$(CC) $(CPPFLAGS) -std=c++11 main.cpp -L /opt/X11/lib -lX11 -o $(PRGNAME) 
 	mv $(PRGNAME) $(BUILDPATH)

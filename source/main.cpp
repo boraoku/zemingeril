@@ -11,6 +11,7 @@ using std::setprecision;
 using std::ios_base;
 using std::setw;
 using std::ofstream;
+using std::thread;
 
 #include "vec.h"
 
@@ -145,7 +146,7 @@ int Ox, Oy; //API ekraninda cizim merkezi
 double Ax, Ay, Az; //kesim kenarinin koordinatlari
 int Lx, Ly, Lz; //3boyutlu seklin kenar uzunluklari ve cizim orani
 
-Vec<pixel> hesap_e, hesap;  //hesaplanan cizim ekrani
+Vec<pixel> hesap_e, hesapXY, hesapXZ, hesapYZ, hesap;  //hesaplanan cizim ekrani
 
 coordinate e_basla, e_bitis; //kesim icin yuzeydeki baslangic ve bitim noktalari
 double e_z; //kesimde inilecek derinlik
@@ -215,7 +216,7 @@ void III_hesapXY(double z, double xx, double yy)
                      gecici.x=ekranx;
                      gecici.y=ekrany;
                      gecici.r=renk;
-                     hesap.push_back(gecici);
+                     hesapXY.push_back(gecici);
              
                      xx = xx + oran_ct;
              
@@ -277,7 +278,7 @@ void III_hesapXZ(double y, double xx, double zz)
                      gecici.x=ekranx;
                      gecici.y=ekrany;
                      gecici.r=renk;
-                     hesap.push_back(gecici);
+                     hesapXZ.push_back(gecici);
              
                      xx = xx + oran_ct;
              
@@ -338,7 +339,7 @@ void III_hesapYZ(double x, double yy, double zz)
                      gecici.x=ekranx;
                      gecici.y=ekrany;
                      gecici.r=renk;
-                     hesap.push_back(gecici);
+                     hesapYZ.push_back(gecici);
              
                      yy = yy + oran_ct;
                      
@@ -374,17 +375,38 @@ void IIIB_hesap()
           cout << "\nSurface 1 of 3::calculated 000 %";
 
           //1.yuzey
-          III_hesapXY(Az, Ax, Ay);
+          thread th1(III_hesapXY, Az, Ax, Ay);
 
           //2.yuzey
 	      cout << "\nSurface 2 of 3::calculated 000 %";
-	      III_hesapXZ(Ay, Ax, Az);
+	      thread th2(III_hesapXZ, Ay, Ax, Az);
 
           //3.yuzey  
 	      cout << "\nSurface 3 of 3::calculated 000 %";
-          III_hesapYZ(Ax, Ay, Az);
+          thread th3(III_hesapYZ, Ax, Ay, Az);
 	  
           cout << "\n";
+
+          th1.join();
+          th2.join();
+          th3.join();
+
+          //hesaplari birlestir
+          for (int k=0; k!=hesapXY.size(); ++k)
+          {
+                hesap.push_back(hesapXY[k]);
+          }
+
+          for (int k=0; k!=hesapXZ.size(); ++k)
+          {
+                hesap.push_back(hesapXZ[k]);
+          }
+
+          for (int k=0; k!=hesapYZ.size(); ++k)
+          {
+                hesap.push_back(hesapYZ[k]);
+          }
+
 }
 
 void IIIB_cizim()
