@@ -21,6 +21,22 @@ using namespace cimg_library;
 #include "kaynak_ZEMiNGeRiL_v05.h"
 using namespace ZEMiNGERiL;
 
+char* formatDouble(double value) {
+
+    char *say = (char*)malloc(256);
+
+#ifdef _WIN32
+    //windows
+    sprintf_s(say, "%03.0f", value);
+#else
+    //linux or mac
+    sprintf(say, "%03.0f", value);
+#endif
+
+    return say;
+}
+
+
 //program by: Bora Okumusoglu, 2006
 
 //Foundation Class
@@ -172,7 +188,6 @@ void III_hesapXY(double z, double xx, double yy)
           double Qnokta=0;
           int ekranx, ekrany;
           color_RGB renk;
-          char say[256];
           double yuzde, yuzdee;
           yuzde=0;
           yuzdee=0;
@@ -202,7 +217,7 @@ void III_hesapXY(double z, double xx, double yy)
                      yuzde=( (j-1) * ( Lx * oran_c ) + i) * 100 / ( Lx * Ly * oran_c * oran_c);
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > (yuzdee) ) {
-                        sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                        char *say=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                         //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
                         cout << "\b\b\b\b\b"; //silmece
                         cout << say; //yazmaca
@@ -233,7 +248,6 @@ void III_hesapXZ(double y, double xx, double zz)
           double Qnokta=0;
           int ekranx, ekrany;
           color_RGB renk;
-          char say[256];
           double yuzde, yuzdee;
           yuzde=0;
           yuzdee=0;
@@ -262,9 +276,8 @@ void III_hesapXZ(double y, double xx, double zz)
                       //ilemin yuzde kacnn tamamland�n yazdr
                      yuzde=( (j-1) * ( Lx * oran_c ) + i) * 100 / ( Lz * Lx * oran_c * oran_c );
                      if (yuzde < 0 ) { yuzde=0; }
-                     if (yuzde > yuzdee) 
-                     {
-                         sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                     if (yuzde > yuzdee) {
+                         char *say=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                          //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
                          cout << "\b\b\b\b\b"; //silmece
                          cout << say; //yazmaca
@@ -295,7 +308,6 @@ void III_hesapYZ(double x, double yy, double zz)
           double Qnokta=0;
           int ekranx, ekrany;
           color_RGB renk;
-          char say[256];
           double yuzde, yuzdee;
           yuzde=0;
           yuzdee=0;
@@ -325,7 +337,7 @@ void III_hesapYZ(double x, double yy, double zz)
                      yuzde=( (j-1) * ( Ly * oran_c ) + i) * 100 / ( Lz * Ly * oran_c * oran_c);
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > yuzdee) {
-                        sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                        char *say=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                         //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
                         cout << "\b\b\b\b\b"; //silmece
                         cout << say; //yazmaca
@@ -561,7 +573,6 @@ void sondaj_hesap()
 
      cout << "\n\nPlease wait while calculation and graphing is being processed... \n";
      
-     char say[256];
      double yuzde=0;
      double yuzdee=0;
      
@@ -572,7 +583,7 @@ void sondaj_hesap()
           yuzde=derinlik * 100 / sondaj_z;
           if (yuzde < 0 ) { yuzde=0; }
           if (yuzde > yuzdee) {
-               	sprintf(say, "%03.0f", yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                char *say=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                	//sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
                	cout << "\b\b\b\b\b"; //silmece
                	cout << say; //yazmaca
@@ -782,7 +793,7 @@ int main( int argc, char **argv )
     
     #ifdef _WIN32
     //windows
-    system("pause")
+    system("pause");
     #else
     //linux or mac
     system("echo 'Press ENTER to exit or wait for 5 seconds.....'");
