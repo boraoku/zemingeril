@@ -759,7 +759,14 @@ void sondaj_cizim()
 
 int main( int argc, char **argv )
 {
+    #ifdef _WIN32
+    //windows
     system("cls");
+    #else
+    //linux or mac
+    system("clear");
+    #endif
+
     cout << "ZeminGeril-Temel 0.5\n\n";
     cout << "Graphing a designated stress distribution \n";
     cout << "inside the soil strafa affected by the overburden foundation\n";
