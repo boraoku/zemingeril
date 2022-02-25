@@ -174,8 +174,11 @@ double toplam_mesafe; //hesap dogrultusunun uzunlugu
 
 //progress related
 char *progressXY = (char*)malloc(256);
+bool printReadyXY = false;
 char *progressXZ = (char*)malloc(256);
+bool printReadyXZ = false;
 char *progressYZ = (char*)malloc(256);
+bool printReadyYZ = false;
 bool III_calc_progressing=true;
 
 //3Boyut
@@ -187,16 +190,19 @@ void progressPrint()
     cout << "| 000 % | 000 % | 000 % |";
 
     while (III_calc_progressing) {
-        cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"; //silmece
-        cout << "| ";
-        cout << progressXY; //yazmaca
-        cout << " %";
-        cout << " | ";
-        cout << progressXZ; //yazmaca
-        cout << " %";
-        cout << " | ";
-        cout << progressYZ; //yazmaca
-        cout << " % |";
+
+        if (printReadyXY && printReadyXZ && printReadyYZ) {
+            cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"; //silmece
+            cout << "| ";
+            cout << progressXY; //yazmaca
+            cout << " %";
+            cout << " | ";
+            cout << progressXZ; //yazmaca
+            cout << " %";
+            cout << " | ";
+            cout << progressYZ; //yazmaca
+            cout << " % |";
+        }
     }
 
     cout << "\nDone\n";
@@ -239,6 +245,7 @@ void III_hesapXY(double z, double xx, double yy)
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > (yuzdee) ) {
                         progressXY=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                        printReadyXY = true;
                         yuzdee=yuzde;
                      }
 
@@ -295,6 +302,7 @@ void III_hesapXZ(double y, double xx, double zz)
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > yuzdee) {
                          progressXZ=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                         printReadyXZ = true;
                          yuzdee=yuzde;
                      }
 
@@ -351,6 +359,7 @@ void III_hesapYZ(double x, double yy, double zz)
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > yuzdee) {
                         progressYZ=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
+                        printReadyYZ = true;
                         yuzdee=yuzde;
                      }
 
@@ -444,7 +453,7 @@ void IIIB_cizim()
       back.resize(800,600,1,3,3);
       back.draw_rectangle(0,0,800,600,beyaz);
   
-      CImgDisplay disp(back,"ZeminGeril-Temel 0.3",0);
+      CImgDisplay disp(back,"ZeminGeril-Temel 0.5",0);
       img=back;
                
       for (int k=0; k!=hesap.size(); ++k)
