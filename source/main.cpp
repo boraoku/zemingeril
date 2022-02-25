@@ -3,15 +3,7 @@
 #include <cmath>
 #include <fstream>
 #include <thread>
-
-using std::cin;                 
-using std::cout;
-using std::streamsize;
-using std::setprecision;
-using std::ios_base;
-using std::setw;
-using std::ofstream;
-using std::thread;
+using namespace std;
 
 #include "vec.h"
 
@@ -150,9 +142,9 @@ void foundation_input() //input routine for console
     ZG.Define(nn,_e);
 }
 
-//***          
+          
 //eski kod devaminda sadece gerilme hesabi rutinleri degistirildi.
-//***
+
 
 //sondaj hesap cizimi icin eksenlerin uzunlugu
 int SL=500;
@@ -797,14 +789,15 @@ int main( int argc, char **argv )
       sondaj_hesap();
       sondaj_cizim();
      }
-    
+
     #ifdef _WIN32
     //windows
     system("pause");
     #else
     //linux or mac
-    system("echo 'Press ENTER to exit or wait for 5 seconds.....'");
-    system("read -t5");
+    system("echo 'Press ENTER to continue . . .'");
+    cin.ignore();
+    cin.ignore();
     #endif
 
     return 0;
