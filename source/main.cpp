@@ -172,8 +172,37 @@ double IIB_Smax=0; //dogrultu boyunca rastlanan maksimum gerilme
 double IIB_Kmax=0; //dogrultu boyunca rastlanan maksimum gerilmenin konumu
 double toplam_mesafe; //hesap dogrultusunun uzunlugu
 
+//progress related
+char *progressXY = (char*)malloc(256);
+char *progressXZ = (char*)malloc(256);
+char *progressYZ = (char*)malloc(256);
+bool III_calc_progressing=true;
 
 //3Boyut
+void progressPrint()
+{
+
+    cout << "Calculation in progress...\n";
+    cout << "|  XY   |  XZ   |  YZ   |\n";
+    cout << "| 000 % | 000 % | 000 % |";
+
+    while (III_calc_progressing) {
+        cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"; //silmece
+        cout << "| ";
+        cout << progressXY; //yazmaca
+        cout << " %";
+        cout << " | ";
+        cout << progressXZ; //yazmaca
+        cout << " %";
+        cout << " | ";
+        cout << progressYZ; //yazmaca
+        cout << " % |";
+    }
+
+    cout << "\nDone\n";
+}
+
+
 void III_hesapXY(double z, double xx, double yy)
 {
           coordinate nokta;
@@ -209,11 +238,7 @@ void III_hesapXY(double z, double xx, double yy)
                      yuzde=( (j-1) * ( Lx * oran_c ) + i) * 100 / ( Lx * Ly * oran_c * oran_c);
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > (yuzdee) ) {
-                        char *say=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
-                        //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
-                        cout << "\b\b\b\b\b"; //silmece
-                        cout << say; //yazmaca
-                        cout << " %";
+                        progressXY=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                         yuzdee=yuzde;
                      }
 
@@ -269,11 +294,7 @@ void III_hesapXZ(double y, double xx, double zz)
                      yuzde=( (j-1) * ( Lx * oran_c ) + i) * 100 / ( Lz * Lx * oran_c * oran_c );
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > yuzdee) {
-                         char *say=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
-                         //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
-                         cout << "\b\b\b\b\b"; //silmece
-                         cout << say; //yazmaca
-                         cout << " %";
+                         progressXZ=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                          yuzdee=yuzde;
                      }
 
@@ -329,11 +350,7 @@ void III_hesapYZ(double x, double yy, double zz)
                      yuzde=( (j-1) * ( Ly * oran_c ) + i) * 100 / ( Lz * Ly * oran_c * oran_c);
                      if (yuzde < 0 ) { yuzde=0; }
                      if (yuzde > yuzdee) {
-                        char *say=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
-                        //sprintf hakkinda: http://www.cplusplus.com/ref/cstdio/sprintf.html
-                        cout << "\b\b\b\b\b"; //silmece
-                        cout << say; //yazmaca
-                        cout << " %";
+                        progressYZ=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
                         yuzdee=yuzde;
                      }
 
@@ -376,24 +393,25 @@ void IIIB_hesap()
 
           oran_ct=1/oran_c;
 
-          cout << "\nSurface 1 of 3::calculated 000 %";
-
           //1.yuzey
           thread th1(III_hesapXY, Az, Ax, Ay);
 
           //2.yuzey
-	      cout << "\nSurface 2 of 3::calculated 000 %";
 	      thread th2(III_hesapXZ, Ay, Ax, Az);
 
           //3.yuzey  
-	      cout << "\nSurface 3 of 3::calculated 000 %";
           thread th3(III_hesapYZ, Ax, Ay, Az);
+
+          //printing
+          thread th4(progressPrint);
 	  
           cout << "\n";
 
           th1.join();
           th2.join();
           th3.join();
+          III_calc_progressing = false;
+          th4.join();
 
           //hesaplari birlestir
           for (int k=0; k!=hesapXY.size(); ++k)
