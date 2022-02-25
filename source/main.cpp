@@ -27,7 +27,7 @@ char* formatDouble(double value) {
 
 #ifdef _WIN32
     //windows
-    sprintf_s(say, "%03.0f", value);
+    sprintf_s(say, 256, "%03.0f", value);
 #else
     //linux or mac
     sprintf(say, "%03.0f", value);
