@@ -3,6 +3,7 @@
 #include <cmath>
 #include <fstream>
 #include <thread>
+#include <chrono>
 using namespace std;
 
 #include "vec.h"
@@ -205,7 +206,7 @@ void progressPrint()
         }
     }
 
-    cout << "\nDone\n";
+    cout << "\nCalculation finished";
 }
 
 
@@ -402,11 +403,14 @@ void IIIB_hesap()
 
           oran_ct=1/oran_c;
 
+          // start timer
+          auto t1 = chrono::high_resolution_clock::now();
+
           //1.yuzey
           thread th1(III_hesapXY, Az, Ax, Ay);
 
           //2.yuzey
-	      thread th2(III_hesapXZ, Ay, Ax, Az);
+          thread th2(III_hesapXZ, Ay, Ax, Az);
 
           //3.yuzey  
           thread th3(III_hesapYZ, Ax, Ay, Az);
@@ -421,6 +425,23 @@ void IIIB_hesap()
           th3.join();
           III_calc_progressing = false;
           th4.join();
+
+          // end timer
+          auto t2 = chrono::high_resolution_clock::now();
+
+          // floating-point duration
+          chrono::duration<double> fp_seconds = t2 - t1;
+          
+          // integral duration
+          chrono::duration<long> int_seconds = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1);
+
+          // print time in decimals if less than 60 seconds or integer form if longer
+          if (int_seconds < chrono::seconds(60)) 
+          {
+                cout << " in " << fp_seconds.count() << " seconds." << endl;  
+          } else {
+                cout << " in " << int_seconds.count() << " seconds." << endl;  
+          }
 
           //hesaplari birlestir
           for (int k=0; k!=hesapXY.size(); ++k)
