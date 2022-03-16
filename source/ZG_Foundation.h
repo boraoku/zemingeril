@@ -17,7 +17,7 @@ namespace ZEMiNGERiL
         double Stress(coordinate _nokta, double _z);
         void Input();
 
-        Vec<pixel> hesapXY, hesapXZ, hesapYZ, hesap;
+        Vec<pixel> hesapXY_a, hesapXY_b, hesapXZ_a, hesapXZ_b, hesapYZ_a, hesapYZ_b, hesap;
 
         //3D Screen drawing center coordinates
         int Ox=400;
@@ -41,18 +41,24 @@ namespace ZEMiNGERiL
         //base load to compare
         double QQ;
 
-        char *progressXY = (char*)malloc(256);
-        bool printReadyXY = false;
-        char *progressXZ = (char*)malloc(256);
-        bool printReadyXZ = false;
-        char *progressYZ = (char*)malloc(256);
-        bool printReadyYZ = false;
+        char *progressXY_a = (char*)malloc(256);
+        bool printReadyXY_a = false;
+        char *progressXY_b = (char*)malloc(256);
+        bool printReadyXY_b = false;
+        char *progressXZ_a = (char*)malloc(256);
+        bool printReadyXZ_a = false;
+        char *progressXZ_b = (char*)malloc(256);
+        bool printReadyXZ_b = false;
+        char *progressYZ_a = (char*)malloc(256);
+        bool printReadyYZ_a = false;
+        char *progressYZ_b = (char*)malloc(256);
+        bool printReadyYZ_b = false;
         bool III_calc_progressing=true;
 
         void III_progressPrint();
-        void III_hesapXY(double z, double xx, double yy);
-        void III_hesapXZ(double y, double xx, double zz);
-        void III_hesapYZ(double x, double yy, double zz);
+        void III_hesapXY(double z, double xx, double yy, bool firstHalf);
+        void III_hesapXZ(double y, double xx, double zz, bool firstHalf);
+        void III_hesapYZ(double x, double yy, double zz, bool firstHalf);
     };
 
     // Define Type and Dimensions of Elements of Foundation

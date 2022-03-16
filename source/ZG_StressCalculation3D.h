@@ -4,29 +4,38 @@ void Foundation::III_progressPrint()
 {
 
     cout << "Calculation in progress...\n";
-    cout << "|  XY   |  XZ   |  YZ   |\n";
-    cout << "| 000 % | 000 % | 000 % |";
+    cout << "|      XY     |      XZ     |      YZ     |\n";
+    cout << "| 000% + 000% | 000% + 000% | 000% + 000% |";
     
     while (this->III_calc_progressing) {
 
-        if (this->printReadyXY && this->printReadyXZ && this->printReadyYZ) {
-            cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"; //silmece
+        if (this->printReadyXY_a && this->printReadyXY_b && this->printReadyXZ_a && this->printReadyXZ_b && this->printReadyYZ_a && this->printReadyYZ_b) {
+            cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"; //silmece
             cout << "| ";
-            cout << this->progressXY; //yazmaca
-            cout << " %";
+            cout << this->progressXY_a; //yazmaca
+            cout << "%";
+            cout << " + ";
+            cout << this->progressXY_b; //yazmaca
+            cout << "%";
             cout << " | ";
-            cout << this->progressXZ; //yazmaca
-            cout << " %";
+            cout << this->progressXZ_a; //yazmaca
+            cout << "%";
+            cout << " + ";
+            cout << this->progressXZ_b; //yazmaca
+            cout << "%";
             cout << " | ";
-            cout << this->progressYZ; //yazmaca
-            cout << " % |";
+            cout << this->progressYZ_a; //yazmaca
+            cout << "%";
+            cout << " + ";
+            cout << this->progressYZ_b; //yazmaca
+            cout << "% |";
         }
     }
     
     cout << "\nCalculation finished";
 }
 
-void Foundation::III_hesapXY(double z, double xx, double yy)
+void Foundation::III_hesapXY(double z, double xx, double yy, bool firstHalf)
 {
     coordinate nokta;
     double Qnokta=0;
@@ -39,7 +48,19 @@ void Foundation::III_hesapXY(double z, double xx, double yy)
     
     const double aci=(3.141592654)/9;
     
-    for (int j=0; j!=( this->Ly*this->oran_c + 1); ++j)
+    int start;
+    int end;
+
+    if (firstHalf) {
+        start = 0;
+        end = ( this->Ly*this->oran_c + 1 ) * 0.5;
+    } else {
+        start = ( this->Ly*this->oran_c + 1 ) * 0.5;
+        end = ( this->Ly*this->oran_c + 1 );
+        yy = yy + this->Ly * 0.5;
+    }
+
+    for (int j=start; j!=end; ++j)
     {
 
         for (int i=0; i!=( this->Lx*this->oran_c + 1 ); ++i)
@@ -58,8 +79,13 @@ void Foundation::III_hesapXY(double z, double xx, double yy)
             yuzde=( (j-1) * ( this->Lx * this->oran_c ) + i) * 100 / ( this->Lx * this->Ly * this->oran_c * this->oran_c);
             if (yuzde < 0 ) { yuzde=0; }
             if (yuzde > (yuzdee) ) {
-                this->progressXY=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
-                this->printReadyXY = true;
+                if (firstHalf) {
+                    this->progressXY_a=formatDouble(yuzde+50);
+                    this->printReadyXY_a = true;
+                } else {
+                    this->progressXY_b=formatDouble(yuzde);
+                    this->printReadyXY_b = true;
+                }
                 yuzdee=yuzde;
             }
             
@@ -69,7 +95,11 @@ void Foundation::III_hesapXY(double z, double xx, double yy)
             gecici.x=ekranx;
             gecici.y=ekrany;
             gecici.r=renk;
-            this->hesapXY.push_back(gecici);
+            if (firstHalf) {
+                this->hesapXY_a.push_back(gecici);
+            } else {
+                this->hesapXY_b.push_back(gecici);
+            }
             
             xx = xx + this->oran_ct;
             
@@ -80,7 +110,7 @@ void Foundation::III_hesapXY(double z, double xx, double yy)
     }
 }
 
-void Foundation::III_hesapXZ(double y, double xx, double zz)
+void Foundation::III_hesapXZ(double y, double xx, double zz, bool firstHalf)
 {
     coordinate nokta;
     double Qnokta=0;
@@ -94,8 +124,20 @@ void Foundation::III_hesapXZ(double y, double xx, double zz)
     nokta.y=y;
     
     const double aci=(3.141592654)/9;
-    
-    for (int j=0; j!=( this->Lz*this->oran_c + 1); ++j)
+
+    int start;
+    int end;
+
+    if (firstHalf) {
+        start = 0;
+        end = ( this->Lz*this->oran_c + 1 ) * 0.5;
+    } else {
+        start = ( this->Lz*this->oran_c + 1 ) * 0.5;
+        end = ( this->Lz*this->oran_c + 1 );
+        zz = zz + this->Lz * 0.5;
+    }
+
+    for (int j=start; j!=end; ++j)
     {
 
         for (int i=0; i!=( this->Lx*this->oran_c + 1); ++i)
@@ -112,8 +154,13 @@ void Foundation::III_hesapXZ(double y, double xx, double zz)
             yuzde=( (j-1) * ( this->Lx * this->oran_c ) + i) * 100 / ( this->Lz * this->Lx * this->oran_c * this->oran_c );
             if (yuzde < 0 ) { yuzde=0; }
             if (yuzde > yuzdee) {
-                this->progressXZ=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
-                this->printReadyXZ = true;
+                if (firstHalf) {
+                    this->progressXZ_a=formatDouble(yuzde+50);
+                    this->printReadyXZ_a = true;
+                } else {
+                    this->progressXZ_b=formatDouble(yuzde);
+                    this->printReadyXZ_b = true;
+                }
                 yuzdee=yuzde;
             }
             
@@ -123,7 +170,12 @@ void Foundation::III_hesapXZ(double y, double xx, double zz)
             gecici.x=ekranx;
             gecici.y=ekrany;
             gecici.r=renk;
-            this->hesapXZ.push_back(gecici);
+            if (firstHalf) {
+                this->hesapXZ_a.push_back(gecici);
+            } else {
+                this->hesapXZ_b.push_back(gecici);
+            }
+            
             
             xx = xx + this->oran_ct;
             
@@ -134,7 +186,7 @@ void Foundation::III_hesapXZ(double y, double xx, double zz)
     }
 }
 
-void Foundation::III_hesapYZ(double x, double yy, double zz)
+void Foundation::III_hesapYZ(double x, double yy, double zz, bool firstHalf)
 {
     coordinate nokta;
     double Qnokta=0;
@@ -149,7 +201,19 @@ void Foundation::III_hesapYZ(double x, double yy, double zz)
     
     const double aci=(3.141592654)/9;
     
-    for (int j=0; j!=( this->Lz * this->oran_c + 1); ++j)
+    int start;
+    int end;
+
+    if (firstHalf) {
+        start = 0;
+        end = ( this->Lz * this->oran_c + 1) * 0.5;
+    } else {
+        start = ( this->Lz * this->oran_c + 1) * 0.5;
+        end = ( this->Lz * this->oran_c + 1);
+        zz = zz + this->Lz * 0.5;
+    }
+
+    for (int j=start; j!=end; ++j)
     {
 
         for (int i=0; i!=( this->Ly*this->oran_c + 1); ++i)
@@ -166,8 +230,13 @@ void Foundation::III_hesapYZ(double x, double yy, double zz)
             yuzde=( (j-1) * ( this->Ly * this->oran_c ) + i) * 100 / ( this->Lz * this->Ly * this->oran_c * this->oran_c);
             if (yuzde < 0 ) { yuzde=0; }
             if (yuzde > yuzdee) {
-                this->progressYZ=formatDouble(yuzde); //integer degerden char eldesi bu sekilde yazdirilir ekrana
-                this->printReadyYZ = true;
+                if (firstHalf) {
+                    this->progressYZ_a=formatDouble(yuzde+50);
+                    this->printReadyYZ_a = true;
+                } else {
+                    this->progressYZ_b=formatDouble(yuzde);
+                    this->printReadyYZ_b = true;
+                }
                 yuzdee=yuzde;
             }
             
@@ -177,7 +246,11 @@ void Foundation::III_hesapYZ(double x, double yy, double zz)
             gecici.x=ekranx;
             gecici.y=ekrany;
             gecici.r=renk;
-            this->hesapYZ.push_back(gecici);
+            if (firstHalf) {
+                this->hesapYZ_a.push_back(gecici);
+            } else {
+                this->hesapYZ_b.push_back(gecici);
+            }
             
             yy = yy + this->oran_ct;
             
@@ -214,22 +287,40 @@ void Foundation::IIIB_hesap()
     auto t1 = chrono::high_resolution_clock::now();
     
     //1.yuzey
-    thread th1(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay);
+    thread th1a(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, true);
+    thread th1b(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, false);
     
     //2.yuzey
-    thread th2(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az);
+    thread th2a(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, true);
+    thread th2b(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, false);
     
     //3.yuzey
-    thread th3(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az);
+    thread th3a(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, true);
+    thread th3b(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, false);
     
     //printing
     thread th4(&Foundation::III_progressPrint, this);
     
     cout << "\n";
     
-    th1.join();
-    th2.join();
-    th3.join();
+    th1a.join();
+    progressXY_a = formatDouble(100.0);
+
+    th1b.join();
+    progressXY_b = formatDouble(100.0);
+    
+    th2a.join();
+    progressXZ_a = formatDouble(100.0);
+
+    th2b.join();
+    progressXZ_b = formatDouble(100.0);
+    
+    th3a.join();
+    progressYZ_a = formatDouble(100.0);
+    
+    th3b.join();
+    progressYZ_b = formatDouble(100.0);
+
     this->III_calc_progressing = false;
     th4.join();
     
@@ -251,19 +342,34 @@ void Foundation::IIIB_hesap()
     }
     
     //hesaplari birlestir
-    for (int k=0; k!=this->hesapXY.size(); ++k)
+    for (int k=0; k!=this->hesapXY_a.size(); ++k)
     {
-        this->hesap.push_back(this->hesapXY[k]);
+        this->hesap.push_back(this->hesapXY_a[k]);
+    }
+
+    for (int k=0; k!=this->hesapXY_b.size(); ++k)
+    {
+        this->hesap.push_back(this->hesapXY_b[k]);
     }
     
-    for (int k=0; k!=this->hesapXZ.size(); ++k)
+    for (int k=0; k!=this->hesapXZ_a.size(); ++k)
     {
-        this->hesap.push_back(this->hesapXZ[k]);
+        this->hesap.push_back(this->hesapXZ_a[k]);
+    }
+
+    for (int k=0; k!=this->hesapXZ_b.size(); ++k)
+    {
+        this->hesap.push_back(this->hesapXZ_b[k]);
     }
     
-    for (int k=0; k!=this->hesapYZ.size(); ++k)
+    for (int k=0; k!=this->hesapYZ_a.size(); ++k)
     {
-        this->hesap.push_back(this->hesapYZ[k]);
+        this->hesap.push_back(this->hesapYZ_a[k]);
+    }
+
+    for (int k=0; k!=this->hesapYZ_b.size(); ++k)
+    {
+        this->hesap.push_back(this->hesapYZ_b[k]);
     }
     
 }
