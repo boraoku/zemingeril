@@ -38,6 +38,8 @@ double startValueFor3DCalc(Multithread thr)
         case Multithread::c: return 0.50; break;
         case Multithread::d: return 0.75; break;
     }
+
+    return 0.0;
 }
 
 double endValueFor3DCalc(Multithread thr)
@@ -49,4 +51,6 @@ double endValueFor3DCalc(Multithread thr)
         case Multithread::c: return 0.75; break;
         case Multithread::d: return 1.00; break;
     }
+
+    return 1.0;
 }

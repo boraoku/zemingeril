@@ -1,8 +1,9 @@
 //Copyright Bora Okumusoglu, 2006-2022.
 
+#include "vec.h"
+
 namespace ZEMiNGERiL
 {
-    #include "vec.h"
     #include "ZG_Helpers.h"
     #include "ZG_Pixels.h"
     #include "ZG_StressCalculation.h"
