@@ -4,32 +4,20 @@ void Foundation::III_progressPrint()
 {
 
     cout << "Calculation in progress...\n";
-    cout << "|      XY     |      XZ     |      YZ     |\n";
-    cout << "| 000% + 000% | 000% + 000% | 000% + 000% |";
+    cout << "|  XY  |  XZ  |  YZ  |\n";
+    cout << "| 000% | 000% | 000% |";
     
     while (this->III_calc_progressing) {
-
-        if (this->printReadyXY_a && this->printReadyXY_b && this->printReadyXZ_a && this->printReadyXZ_b && this->printReadyYZ_a && this->printReadyYZ_b) {
-            cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"; //silmece
-            cout << "| ";
-            cout << this->progressXY_a; //yazmaca
-            cout << "%";
-            cout << " + ";
-            cout << this->progressXY_b; //yazmaca
-            cout << "%";
-            cout << " | ";
-            cout << this->progressXZ_a; //yazmaca
-            cout << "%";
-            cout << " + ";
-            cout << this->progressXZ_b; //yazmaca
-            cout << "%";
-            cout << " | ";
-            cout << this->progressYZ_a; //yazmaca
-            cout << "%";
-            cout << " + ";
-            cout << this->progressYZ_b; //yazmaca
-            cout << "% |";
-        }
+        cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"; //silmece
+        cout << "| ";
+        cout << formatDouble(this->progressXY_a + this->progressXY_b); //yazmaca
+        cout << "%";
+        cout << " | ";
+        cout << formatDouble(this->progressXZ_a + this->progressXZ_b); //yazmaca
+        cout << "%";
+        cout << " | ";
+        cout << formatDouble(this->progressYZ_a + this->progressYZ_b); //yazmaca
+        cout << "% |";
     }
     
     cout << "\nCalculation finished";
@@ -80,11 +68,9 @@ void Foundation::III_hesapXY(double z, double xx, double yy, bool firstHalf)
             if (yuzde < 0 ) { yuzde=0; }
             if (yuzde > (yuzdee) ) {
                 if (firstHalf) {
-                    this->progressXY_a=formatDouble(yuzde+50);
-                    this->printReadyXY_a = true;
+                    this->progressXY_a=yuzde / this->threadsPerSurface;
                 } else {
-                    this->progressXY_b=formatDouble(yuzde);
-                    this->printReadyXY_b = true;
+                    this->progressXY_b=yuzde / this->threadsPerSurface;
                 }
                 yuzdee=yuzde;
             }
@@ -155,11 +141,9 @@ void Foundation::III_hesapXZ(double y, double xx, double zz, bool firstHalf)
             if (yuzde < 0 ) { yuzde=0; }
             if (yuzde > yuzdee) {
                 if (firstHalf) {
-                    this->progressXZ_a=formatDouble(yuzde+50);
-                    this->printReadyXZ_a = true;
+                    this->progressXZ_a=yuzde / this->threadsPerSurface;
                 } else {
-                    this->progressXZ_b=formatDouble(yuzde);
-                    this->printReadyXZ_b = true;
+                    this->progressXZ_b=yuzde / this->threadsPerSurface;
                 }
                 yuzdee=yuzde;
             }
@@ -231,11 +215,9 @@ void Foundation::III_hesapYZ(double x, double yy, double zz, bool firstHalf)
             if (yuzde < 0 ) { yuzde=0; }
             if (yuzde > yuzdee) {
                 if (firstHalf) {
-                    this->progressYZ_a=formatDouble(yuzde+50);
-                    this->printReadyYZ_a = true;
+                    this->progressYZ_a=yuzde / this->threadsPerSurface;
                 } else {
-                    this->progressYZ_b=formatDouble(yuzde);
-                    this->printReadyYZ_b = true;
+                    this->progressYZ_b=yuzde / this->threadsPerSurface;
                 }
                 yuzdee=yuzde;
             }
@@ -303,23 +285,25 @@ void Foundation::IIIB_hesap()
     
     cout << "\n";
     
+    const double completedPercentage = 100.0 / this->threadsPerSurface;
+
     th1a.join();
-    progressXY_a = formatDouble(100.0);
+    progressXY_a = completedPercentage;
 
     th1b.join();
-    progressXY_b = formatDouble(100.0);
+    progressXY_b = completedPercentage;
     
     th2a.join();
-    progressXZ_a = formatDouble(100.0);
+    progressXZ_a = completedPercentage;
 
     th2b.join();
-    progressXZ_b = formatDouble(100.0);
+    progressXZ_b = completedPercentage;
     
     th3a.join();
-    progressYZ_a = formatDouble(100.0);
+    progressYZ_a = completedPercentage;
     
     th3b.join();
-    progressYZ_b = formatDouble(100.0);
+    progressYZ_b = completedPercentage;
 
     this->III_calc_progressing = false;
     th4.join();

@@ -41,18 +41,27 @@ namespace ZEMiNGERiL
         //base load to compare
         double QQ;
 
-        char *progressXY_a = (char*)malloc(256);
-        bool printReadyXY_a = false;
-        char *progressXY_b = (char*)malloc(256);
-        bool printReadyXY_b = false;
-        char *progressXZ_a = (char*)malloc(256);
-        bool printReadyXZ_a = false;
-        char *progressXZ_b = (char*)malloc(256);
-        bool printReadyXZ_b = false;
-        char *progressYZ_a = (char*)malloc(256);
-        bool printReadyYZ_a = false;
-        char *progressYZ_b = (char*)malloc(256);
-        bool printReadyYZ_b = false;
+        //progress records a to d for 4 threads
+        const int threadsPerSurface = 2;
+
+        //XY progress
+        double progressXY_a = 0.0;
+        double progressXY_b = 0.0;
+        double progressXY_c = 0.0;
+        double progressXY_d = 0.0;
+
+        //XZ progress
+        double progressXZ_a = 0.0;
+        double progressXZ_b = 0.0;
+        double progressXZ_c = 0.0;
+        double progressXZ_d = 0.0;
+
+        //YZ progress
+        double progressYZ_a = 0.0;
+        double progressYZ_b = 0.0;
+        double progressYZ_c = 0.0;
+        double progressYZ_d = 0.0;
+        
         bool III_calc_progressing=true;
 
         void III_progressPrint();
