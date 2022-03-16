@@ -1,4 +1,5 @@
 //from "Accelerated C++" by Andrew Koenig, Barbara E. Moo
+
 #ifndef VEC_H
 #define VEC_H
 

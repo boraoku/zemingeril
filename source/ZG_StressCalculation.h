@@ -1,92 +1,6 @@
-namespace ZEMiNGERiL
-{
+//Copyright Bora Okumusoglu, 2006-2021.
 
-const double pi=3.141592654;
-
-struct coordinate
-{
-    double x, y;
-};
-     
-double Distance(coordinate Aa, coordinate Bb)
-{
-    return sqrt( pow((Aa.x-Bb.x),2) + pow((Aa.y-Bb.y),2) );
-}
-
-struct color_RGB
-{
-    unsigned char deger [3];
-};
-
- //Colors for Magnitude Scaling
-const int color_skala[] =
-{
- 255, 0, 0,
- 191, 55, 23,
- 216, 125, 34,
- 218, 201, 27,
- 122, 184, 66,
- 79, 172, 106,
- 50, 157, 147,
- 17, 153, 224,
- 18, 122, 203,
- 15, 94, 179,
- 9, 40, 123
-};
-
-struct pixel
-{
-    int x, y;
-    color_RGB r;
-};
-
-//Coloring a Relavite Magnitude, Qh:Magnitude to be colored, Qt: Magnitude to be referred to
-color_RGB color_calc(double Qh, double Qt)
-{
-    const double tolerans=0.10;
-    const double Qoran=Qh/Qt;
-    color_RGB gecici;
-
-    if (Qoran==0){gecici.deger[0]=0; gecici.deger[1]=0; gecici.deger[2]=0; return gecici;}
-
-    if (Qh>Qt)                             
-    { gecici.deger[0]=color_skala[0]; gecici.deger[1]=color_skala[1]; gecici.deger[2]=color_skala[2]; return gecici; }
-    
-    if (fabs(Qoran-1)<tolerans)            
-    { gecici.deger[0]=color_skala[3]; gecici.deger[1]=color_skala[4]; gecici.deger[2]=color_skala[5]; return gecici; }
-    
-    if (fabs(Qoran-0.9)<tolerans)          
-    { gecici.deger[0]=color_skala[6]; gecici.deger[1]=color_skala[7]; gecici.deger[2]=color_skala[8]; return gecici; }
-    
-    if (fabs(Qoran-0.8)<tolerans)          
-    { gecici.deger[0]=color_skala[9]; gecici.deger[1]=color_skala[10]; gecici.deger[2]=color_skala[11]; return gecici; }
-    
-    if (fabs(Qoran-0.7)<tolerans)          
-    { gecici.deger[0]=color_skala[12]; gecici.deger[1]=color_skala[13]; gecici.deger[2]=color_skala[14]; return gecici; }
-    
-    if (fabs(Qoran-0.6)<tolerans)          
-    { gecici.deger[0]=color_skala[15]; gecici.deger[1]=color_skala[16]; gecici.deger[2]=color_skala[17]; return gecici; }
-    
-    if (fabs(Qoran-0.5)<tolerans)          
-    { gecici.deger[0]=color_skala[18]; gecici.deger[1]=color_skala[19]; gecici.deger[2]=color_skala[20]; return gecici; }
-    
-    if (fabs(Qoran-0.4)<tolerans)          
-    { gecici.deger[0]=color_skala[21]; gecici.deger[1]=color_skala[22]; gecici.deger[2]=color_skala[23]; return gecici; }
-    
-    if (fabs(Qoran-0.3)<tolerans)          
-    { gecici.deger[0]=color_skala[24]; gecici.deger[1]=color_skala[25]; gecici.deger[2]=color_skala[26]; return gecici; }
-    
-    if (fabs(Qoran-0.2)<tolerans)          
-    { gecici.deger[0]=color_skala[27]; gecici.deger[1]=color_skala[28]; gecici.deger[2]=color_skala[29]; return gecici; }
-    
-    if (fabs(Qoran-0.1)<tolerans)          
-    { gecici.deger[0]=color_skala[30]; gecici.deger[1]=color_skala[31]; gecici.deger[2]=color_skala[32]; return gecici; }
-
-    gecici.deger[0] = 0; gecici.deger[1] = 0; gecici.deger[2] = 0; 
-    return gecici;
-}
-
-//Specifications of a Foundation compiled as an Element(FOR INPUT PURPOSE)
+// Specifications of a Foundation compiled as an Element (FOR INPUT PURPOSE)
 struct element
 {
     int type;                                    //Type, 0:rectangular, 1:circular, 2:arch
@@ -142,7 +56,7 @@ double sigmaZ(double B, double L, double z)
     R1=sqrt(pow(L,2)+pow(z,2));
     R2=sqrt(pow(B,2)+pow(z,2));
     R3=sqrt(pow(L,2)+pow(B,2)+pow(z,2));
-     
+
     return ( atan(L*B/(z*R3)) + L*B*z/R3*( 1/pow(R1,2) + 1/pow(R2,2) ) ) / (2*pi);
 }
 
@@ -153,7 +67,7 @@ double sigmaY(double B, double L, double z)
     R1=sqrt(pow(L,2)+pow(z,2));
     R2=sqrt(pow(B,2)+pow(z,2));
     R3=sqrt(pow(L,2)+pow(B,2)+pow(z,2));
-     
+
     return ( atan(L*B/(z*R3)) - L*B*z/(pow(R2,2)*R3) ) / (2*pi);
 }
 
@@ -164,7 +78,7 @@ double sigmaX(double B, double L, double z)
     R1=sqrt(pow(L,2)+pow(z,2));
     R2=sqrt(pow(B,2)+pow(z,2));
     R3=sqrt(pow(L,2)+pow(B,2)+pow(z,2));
-     
+
     return ( atan(L*B/(z*R3)) - L*B*z/(pow(R1,2)*R3) ) / (2*pi);
 }
 
@@ -175,7 +89,7 @@ double ToYZ(double B, double L, double z)
     R1=sqrt(pow(L,2)+pow(z,2));
     R2=sqrt(pow(B,2)+pow(z,2));
     R3=sqrt(pow(L,2)+pow(B,2)+pow(z,2));
-     
+
     return ( L/R1 - pow(z,2)*L/(pow(R2,2)*R3)) / (2*pi);
 }
 
@@ -186,7 +100,7 @@ double ToXZ(double B, double L, double z)
     R1=sqrt(pow(L,2)+pow(z,2));
     R2=sqrt(pow(B,2)+pow(z,2));
     R3=sqrt(pow(L,2)+pow(B,2)+pow(z,2));
-     
+
     return ( B/R2 - pow(z,2)*B/(pow(R1,2)*R3)) / (2*pi);
 }
 
@@ -197,7 +111,7 @@ double ToXY(double B, double L, double z)
     R1=sqrt(pow(L,2)+pow(z,2));
     R2=sqrt(pow(B,2)+pow(z,2));
     R3=sqrt(pow(L,2)+pow(B,2)+pow(z,2));
-     
+
     return ( 1 + z/R3 - z*( 1/R1 - 1/R2 ) ) / (2*pi);
 }
 
@@ -207,25 +121,25 @@ double If_rectangular(double kenar1, double kenar2, double z)
     //kenar uzunluklari sifir ise hesap yapma
     if ( (kenar1==0) || (kenar2==0) )
     {
-         return 0.00;
-    }
+       return 0.00;
+   }
 
     //select shear functions of Holl here and disable the rest   
     //return ToXZ(kenar1, kenar2, z);
 
     //influence factor is equal to 0.25 at the surface(beneath the corner)
-    if (z==0)
-    {
-        return 0.25; 
-    }    
-    else
-    {
+   if (z==0)
+   {
+    return 0.25; 
+}    
+else
+{
         //Select the stress distribution function here, manually.
-        return Boussinesq(kenar1, kenar2, z);
+    return Boussinesq(kenar1, kenar2, z);
         //return Westergaard(kenar1, kenar2, z);        
         //return sigmaZ(kenar1, kenar2, z);
-    }
-    
+}
+
 }
 
 //RECTANGULAR_OVERLOADED_1
@@ -268,19 +182,19 @@ double If_rectangular(element _e,coordinate _nokta, double _z)
         if((_nokta.y==_e.center.y + _e.L2/2) || (_nokta.y==_e.center.y - _e.L2/2) )
         {
             if((_nokta.x>=_e.center.x - _e.L1/2) && (_nokta.x<=_e.center.x + _e.L1/2) )
-            { kats *= 0.5; }
+                { kats *= 0.5; }
             if((_nokta.x==_e.center.x - _e.L1/2) || (_nokta.x==_e.center.x + _e.L1/2) )
-            { kats *= 0.5; }
+                { kats *= 0.5; }
             return kats;         
         }
         if((_nokta.x==_e.center.x + _e.L1/2) || (_nokta.x==_e.center.x - _e.L1/2) )
         {
             if((_nokta.y>_e.center.y - _e.L2/2) && (_nokta.y<_e.center.y + _e.L2/2) )
-            { kats = 0.5; }
+                { kats = 0.5; }
             return kats;
         }                    
-     }         
-     return If_rectangular(_e.center, _nokta, _e.L1, _e.L2, _z);
+    }         
+    return If_rectangular(_e.center, _nokta, _e.L1, _e.L2, _z);
 }
 
 
@@ -328,15 +242,15 @@ double If_circular(double R, coordinate merkez, coordinate nokta, double zz)
     if ( (zz==0) && (Distance(merkez,nokta)==R) && (merkez.x==nokta.x) ) { If=0.25; i=dilimsayi; } //koselerde
     if ( (zz==0) && (merkez.x==nokta.x) && (nokta.y<(merkez.y+R)) && (nokta.y>(merkez.y-R)) ) { If=0.5; i=dilimsayi; }//duz kenarda
     //dikdortgen dilimleme ile hesabin yapildigi dongu
-        
+
     //dilimparcalari
     double sagust=0, solust=0, sagalt=0, solalt=0;
-         
+
     while (i<dilimsayi)
     {
         x2=x+Dx;
         y2=sqrt(pow(R,2)-pow(x2,2));
-                
+
         //Sag ust ceyrek
         dilimmerkez.x=merkez.x+(x+(Dx/2));
         dilimmerkez.y=merkez.y+((y+y2)/4);
@@ -356,9 +270,9 @@ double If_circular(double R, coordinate merkez, coordinate nokta, double zz)
         dilimmerkez.x=merkez.x-(x+(Dx/2));
         dilimmerkez.y=merkez.y-((y+y2)/4);
         solalt=If_rectangular(dilimmerkez,nokta,Dx,((y+y2)/2),zz);
-                
+
         If+=sagust + solust + sagalt + solalt;
-                
+
         x=x2; y=y2;
         i++;
     }
@@ -377,7 +291,7 @@ double If_arch(double alfa, double R, coordinate merkez, coordinate nokta, doubl
     int i;
     double x, y, If;
     double x2, y2, yy, y22;
-          
+
     coordinate dilimmerkez, acilimerkez;
     double dilimk1, dilimk2, acilik1, acilik2;
 
@@ -417,19 +331,19 @@ double If_arch(double alfa, double R, coordinate merkez, coordinate nokta, doubl
     if ( (zz==0) && (Distance(merkez,nokta)==R) && (merkez.x==nokta.x) ) { If=0.25; i=dilimsayi; } //koselerde
     if ( (zz==0) && (merkez.x==nokta.x) && (nokta.y<(merkez.y+R)) && (nokta.y>(merkez.y-R)) ) { If=0.5; i=dilimsayi; }//duz kenarda
     //dikdortgen dilimleme ile hesabin yapildigi dongu
-          
+
     //dilimparcalari
     double sagust=0, solust=0, sagalt=0, solalt=0;
-         
+
     while (i<dilimsayi)
     {
         coordinate gecicinokta;          
         double galfa;
-                  
+
         //tam ceyrek icin                
         x2=x+Dx;
         y2=sqrt(pow(R,2)-pow(x2,2));
-                
+
         dilimmerkez.x=x+Dx/2;
         dilimmerkez.y=(y+y2)/4;
         dilimk1=Dx;
@@ -442,17 +356,17 @@ double If_arch(double alfa, double R, coordinate merkez, coordinate nokta, doubl
         //aciliyla kesilen ceyrek icin                
         yy=x/tan(galfa/180*pi);
         y22=x2/tan(galfa/180*pi);
-                
+
         acilimerkez.x=x+Dx/2;
         acilimerkez.y=( (y+y2)/2 + (yy+y22)/2 )/2;
         acilik1=Dx;
         acilik2=( (y+y2)/2 - (yy+y22)/2 );     
-                
+
         gecicinokta.x=nokta.x-merkez.x;
         gecicinokta.y=nokta.y-merkez.y;
-                
+
         //aciya gore cozumler
-                
+
         if(alfa<90)
         {
             //sadece aciliyla kesilen ceyrek parcasi icin        
@@ -469,7 +383,7 @@ double If_arch(double alfa, double R, coordinate merkez, coordinate nokta, doubl
         {
             //tam ceyregin dilim parcasi icin
             If+=If_rectangular(dilimmerkez,gecicinokta,dilimk1,dilimk2,zz);
-                
+
             //aciliyla kesilen ceyrek parcasi icin
             //yay acisina ulasilmadikca hesaplanacak
             if( (x2/y2) < tan(galfa/180*pi) ) 
@@ -480,11 +394,11 @@ double If_arch(double alfa, double R, coordinate merkez, coordinate nokta, doubl
                 If+=If_rectangular(acilimerkez,gecicinokta,acilik1,acilik2,zz);        
             }    
         } 
-                                
+
         x=x2; y=y2;
         i++;  
     }
-return If;
+    return If;
 }
 
 //ARCH(0-180)_OVERLOADED
@@ -492,5 +406,3 @@ double If_arch(element _e,coordinate _nokta, double _z)
 {
     return If_arch(_e.alfa, _e.L1, _e.center, _nokta, _z);
 }
-
-}//namespace ending
