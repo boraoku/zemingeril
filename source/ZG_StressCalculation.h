@@ -1,4 +1,4 @@
-//Copyright Bora Okumusoglu, 2006-2021.
+//Copyright Bora Okumusoglu, 2006-2022.
 
 // Specifications of a Foundation compiled as an Element (FOR INPUT PURPOSE)
 struct element

@@ -1,4 +1,4 @@
-//Copyright Bora Okumusoglu, 2006-2021.
+//Copyright Bora Okumusoglu, 2006-2022.
 
 const double pi=3.141592654;
 
@@ -25,4 +25,28 @@ char* formatDouble(double value) {
 #endif
 
     return say;
+}
+
+enum Multithread { a, b, c, d };
+
+double startValueFor3DCalc(Multithread thr)
+{
+    switch(thr)
+    {
+        case Multithread::a: return 0.00; break;
+        case Multithread::b: return 0.25; break;
+        case Multithread::c: return 0.50; break;
+        case Multithread::d: return 0.75; break;
+    }
+}
+
+double endValueFor3DCalc(Multithread thr)
+{
+    switch(thr)
+    {
+        case Multithread::a: return 0.25; break;
+        case Multithread::b: return 0.50; break;
+        case Multithread::c: return 0.75; break;
+        case Multithread::d: return 1.00; break;
+    }
 }

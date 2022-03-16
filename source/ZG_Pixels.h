@@ -1,4 +1,4 @@
-//Copyright Bora Okumusoglu, 2006-2021.
+//Copyright Bora Okumusoglu, 2006-2022.
 
 struct color_RGB
 {

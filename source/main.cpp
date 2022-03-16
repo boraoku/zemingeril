@@ -65,7 +65,7 @@ void sondaj_hesap()
     //hesap kismi
     while(hesap_sdj.size()!=zL+1)
     {
-        //ilemin yuzde kacnn tamamlandï¿½n yazdr
+        //ilemin yuzde kacnn tamamlandigini yazdir
         yuzde=derinlik * 100 / sondaj_z;
         if (yuzde < 0 ) { yuzde=0; }
         if (yuzde > yuzdee) {
@@ -100,7 +100,7 @@ void sondaj_hesap()
         outfile << derinlik << "  " << Qnokta << "\n";
         derinlik += sondaj_z / zL / 2 ;
         
-        if(derinlik<=sondaj_z) //sondaj derinliðinin en sonda yarým deðer geçilmesi engellenir
+        if(derinlik<=sondaj_z) //sondaj derinliginin en sonda yarim deger gecilmesi engellenir
         {
             Qnokta=ZG.Stress(sondaj_nokta, derinlik);
             outfile << derinlik << "  " << Qnokta << "\n";

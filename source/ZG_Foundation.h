@@ -1,8 +1,7 @@
-//Copyright Bora Okumusoglu, 2006-2021.
+//Copyright Bora Okumusoglu, 2006-2022.
 
 namespace ZEMiNGERiL
 {
-    #include <thread>
     #include "vec.h"
     #include "ZG_Helpers.h"
     #include "ZG_Pixels.h"
@@ -17,7 +16,10 @@ namespace ZEMiNGERiL
         double Stress(coordinate _nokta, double _z);
         void Input();
 
-        Vec<pixel> hesapXY_a, hesapXY_b, hesapXZ_a, hesapXZ_b, hesapYZ_a, hesapYZ_b, hesap;
+        Vec<pixel> hesapXY_a, hesapXY_b, hesapXY_c, hesapXY_d; 
+        Vec<pixel> hesapXZ_a, hesapXZ_b, hesapXZ_c, hesapXZ_d;
+        Vec<pixel> hesapYZ_a, hesapYZ_b, hesapYZ_c, hesapYZ_d;
+        Vec<pixel> hesap;
 
         //3D Screen drawing center coordinates
         int Ox=400;
@@ -41,8 +43,9 @@ namespace ZEMiNGERiL
         //base load to compare
         double QQ;
 
+        const double threadsPerSurface = 4.0;
+
         //progress records a to d for 4 threads
-        const int threadsPerSurface = 2;
 
         //XY progress
         double progressXY_a = 0.0;
@@ -65,9 +68,9 @@ namespace ZEMiNGERiL
         bool III_calc_progressing=true;
 
         void III_progressPrint();
-        void III_hesapXY(double z, double xx, double yy, bool firstHalf);
-        void III_hesapXZ(double y, double xx, double zz, bool firstHalf);
-        void III_hesapYZ(double x, double yy, double zz, bool firstHalf);
+        void III_hesapXY(double z, double xx, double yy, Multithread thr);
+        void III_hesapXZ(double y, double xx, double zz, Multithread thr);
+        void III_hesapYZ(double x, double yy, double zz, Multithread thr);
     };
 
     // Define Type and Dimensions of Elements of Foundation

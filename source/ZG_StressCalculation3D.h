@@ -1,4 +1,4 @@
-//Copyright Bora Okumusoglu, 2006-2021.
+//Copyright Bora Okumusoglu, 2006-2022.
 
 void Foundation::III_progressPrint()
 {
@@ -8,22 +8,29 @@ void Foundation::III_progressPrint()
     cout << "| 000% | 000% | 000% |";
     
     while (this->III_calc_progressing) {
-        cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"; //silmece
+        
+        // advanced output
+        cout << "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"; // erasing
         cout << "| ";
-        cout << formatDouble(this->progressXY_a + this->progressXY_b); //yazmaca
+        cout << formatDouble(this->progressXY_a + this->progressXY_b + this->progressXY_c + this->progressXY_d); //write-out
         cout << "%";
         cout << " | ";
-        cout << formatDouble(this->progressXZ_a + this->progressXZ_b); //yazmaca
+        cout << formatDouble(this->progressXZ_a + this->progressXZ_b + this->progressXZ_c + this->progressXZ_d); //write-out
         cout << "%";
         cout << " | ";
-        cout << formatDouble(this->progressYZ_a + this->progressYZ_b); //yazmaca
+        cout << formatDouble(this->progressYZ_a + this->progressYZ_b + this->progressYZ_c + this->progressYZ_d); //write-out
         cout << "% |";
+        
+        // simplified output
+        //cout << "A:" << (this->progressXY_a + this->progressXY_b + this->progressXY_c + this->progressXY_d); //write-out
+        //cout << "B:" << (this->progressXZ_a + this->progressXZ_b + this->progressXZ_c + this->progressXZ_d); //write-out
+        //cout << "C:" << (this->progressYZ_a + this->progressYZ_b + this->progressYZ_c + this->progressYZ_d) << "\n"; //write-out
     }
     
     cout << "\nCalculation finished";
 }
 
-void Foundation::III_hesapXY(double z, double xx, double yy, bool firstHalf)
+void Foundation::III_hesapXY(double z, double xx, double yy, Multithread thr)
 {
     coordinate nokta;
     double Qnokta=0;
@@ -36,17 +43,9 @@ void Foundation::III_hesapXY(double z, double xx, double yy, bool firstHalf)
     
     const double aci=(3.141592654)/9;
     
-    int start;
-    int end;
-
-    if (firstHalf) {
-        start = 0;
-        end = ( this->Ly*this->oran_c + 1 ) * 0.5;
-    } else {
-        start = ( this->Ly*this->oran_c + 1 ) * 0.5;
-        end = ( this->Ly*this->oran_c + 1 );
-        yy = yy + this->Ly * 0.5;
-    }
+    int start = startValueFor3DCalc(thr) * ( this->Ly*this->oran_c + 1 );
+    int end = endValueFor3DCalc(thr) * ( this->Ly*this->oran_c + 1 );
+    yy = yy + this->Ly * startValueFor3DCalc(thr);
 
     for (int j=start; j!=end; ++j)
     {
@@ -62,15 +61,16 @@ void Foundation::III_hesapXY(double z, double xx, double yy, bool firstHalf)
             ekranx=this->Ox + i*cos(aci) - j*cos(aci);
             ekrany=this->Oy - j*sin(aci) - i*sin(aci);
             
-            
-            //ilemin yuzde kacnn tamamlandigin yazdr
-            yuzde=( (j-1) * ( this->Lx * this->oran_c ) + i) * 100 / ( this->Lx * this->Ly * this->oran_c * this->oran_c);
+            //completion percentage calculation
+            yuzde= ( (j - start) * ( this->Lx*this->oran_c + 1 ) + i ) / ( (end - start + 1) * ( this->Lx*this->oran_c + 1 ) ) * 100.0;
             if (yuzde < 0 ) { yuzde=0; }
             if (yuzde > (yuzdee) ) {
-                if (firstHalf) {
-                    this->progressXY_a=yuzde / this->threadsPerSurface;
-                } else {
-                    this->progressXY_b=yuzde / this->threadsPerSurface;
+                switch(thr)
+                {
+                    case Multithread::a: this->progressXY_a=yuzde / this->threadsPerSurface; break;
+                    case Multithread::b: this->progressXY_b=yuzde / this->threadsPerSurface; break;
+                    case Multithread::c: this->progressXY_c=yuzde / this->threadsPerSurface; break;
+                    case Multithread::d: this->progressXY_d=yuzde / this->threadsPerSurface; break;
                 }
                 yuzdee=yuzde;
             }
@@ -81,10 +81,12 @@ void Foundation::III_hesapXY(double z, double xx, double yy, bool firstHalf)
             gecici.x=ekranx;
             gecici.y=ekrany;
             gecici.r=renk;
-            if (firstHalf) {
-                this->hesapXY_a.push_back(gecici);
-            } else {
-                this->hesapXY_b.push_back(gecici);
+            switch(thr)
+            {
+                case Multithread::a: this->hesapXY_a.push_back(gecici); break;
+                case Multithread::b: this->hesapXY_b.push_back(gecici); break;
+                case Multithread::c: this->hesapXY_c.push_back(gecici); break;
+                case Multithread::d: this->hesapXY_d.push_back(gecici); break;
             }
             
             xx = xx + this->oran_ct;
@@ -96,7 +98,7 @@ void Foundation::III_hesapXY(double z, double xx, double yy, bool firstHalf)
     }
 }
 
-void Foundation::III_hesapXZ(double y, double xx, double zz, bool firstHalf)
+void Foundation::III_hesapXZ(double y, double xx, double zz, Multithread thr)
 {
     coordinate nokta;
     double Qnokta=0;
@@ -111,17 +113,9 @@ void Foundation::III_hesapXZ(double y, double xx, double zz, bool firstHalf)
     
     const double aci=(3.141592654)/9;
 
-    int start;
-    int end;
-
-    if (firstHalf) {
-        start = 0;
-        end = ( this->Lz*this->oran_c + 1 ) * 0.5;
-    } else {
-        start = ( this->Lz*this->oran_c + 1 ) * 0.5;
-        end = ( this->Lz*this->oran_c + 1 );
-        zz = zz + this->Lz * 0.5;
-    }
+    int start = startValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 );
+    int end = endValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 );
+    zz = zz + this->Lz * startValueFor3DCalc(thr);
 
     for (int j=start; j!=end; ++j)
     {
@@ -136,14 +130,16 @@ void Foundation::III_hesapXZ(double y, double xx, double zz, bool firstHalf)
             ekranx=this->Ox + i*cos(aci);
             ekrany=this->Oy + j - i*sin(aci);
             
-            //ilemin yuzde kacnn tamamlandï¿½n yazdr
-            yuzde=( (j-1) * ( this->Lx * this->oran_c ) + i) * 100 / ( this->Lz * this->Lx * this->oran_c * this->oran_c );
+            //completion percentage calculation
+            yuzde= ( (j - start) * ( this->Lx*this->oran_c + 1 ) + i ) / ( (end - start + 1) * ( this->Lx*this->oran_c + 1 ) ) * 100.0;
             if (yuzde < 0 ) { yuzde=0; }
             if (yuzde > yuzdee) {
-                if (firstHalf) {
-                    this->progressXZ_a=yuzde / this->threadsPerSurface;
-                } else {
-                    this->progressXZ_b=yuzde / this->threadsPerSurface;
+                switch(thr)
+                {
+                    case Multithread::a: this->progressXZ_a=yuzde / this->threadsPerSurface; break;
+                    case Multithread::b: this->progressXZ_b=yuzde / this->threadsPerSurface; break;
+                    case Multithread::c: this->progressXZ_c=yuzde / this->threadsPerSurface; break;
+                    case Multithread::d: this->progressXZ_d=yuzde / this->threadsPerSurface; break;
                 }
                 yuzdee=yuzde;
             }
@@ -154,12 +150,13 @@ void Foundation::III_hesapXZ(double y, double xx, double zz, bool firstHalf)
             gecici.x=ekranx;
             gecici.y=ekrany;
             gecici.r=renk;
-            if (firstHalf) {
-                this->hesapXZ_a.push_back(gecici);
-            } else {
-                this->hesapXZ_b.push_back(gecici);
+            switch(thr)
+            {
+                case Multithread::a: this->hesapXZ_a.push_back(gecici); break;
+                case Multithread::b: this->hesapXZ_b.push_back(gecici); break;
+                case Multithread::c: this->hesapXZ_c.push_back(gecici); break;
+                case Multithread::d: this->hesapXZ_d.push_back(gecici); break;
             }
-            
             
             xx = xx + this->oran_ct;
             
@@ -170,32 +167,24 @@ void Foundation::III_hesapXZ(double y, double xx, double zz, bool firstHalf)
     }
 }
 
-void Foundation::III_hesapYZ(double x, double yy, double zz, bool firstHalf)
+void Foundation::III_hesapYZ(double x, double yy, double zz, Multithread thr)
 {
     coordinate nokta;
     double Qnokta=0;
     int ekranx, ekrany;
     color_RGB renk;
     double yuzde, yuzdee;
-    yuzde=0;
-    yuzdee=0;
+    yuzde=0.0;
+    yuzdee=0.0;
     pixel gecici;
     
     nokta.x=x;
     
     const double aci=(3.141592654)/9;
-    
-    int start;
-    int end;
 
-    if (firstHalf) {
-        start = 0;
-        end = ( this->Lz * this->oran_c + 1) * 0.5;
-    } else {
-        start = ( this->Lz * this->oran_c + 1) * 0.5;
-        end = ( this->Lz * this->oran_c + 1);
-        zz = zz + this->Lz * 0.5;
-    }
+    int start = startValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 );
+    int end = endValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 );
+    zz = zz + this->Lz * startValueFor3DCalc(thr);
 
     for (int j=start; j!=end; ++j)
     {
@@ -210,14 +199,16 @@ void Foundation::III_hesapYZ(double x, double yy, double zz, bool firstHalf)
             ekranx=this->Ox - i*cos(aci);
             ekrany=this->Oy + j - i*sin(aci);
             
-            //ilemin yuzde kacnn tamamlandï¿½n yazdr
-            yuzde=( (j-1) * ( this->Ly * this->oran_c ) + i) * 100 / ( this->Lz * this->Ly * this->oran_c * this->oran_c);
+            //completion percentage calculation
+            yuzde= ( (j - start) * ( this->Ly*this->oran_c + 1 ) + i ) / ( (end - start + 1) * ( this->Ly*this->oran_c + 1 ) ) * 100.0;
             if (yuzde < 0 ) { yuzde=0; }
             if (yuzde > yuzdee) {
-                if (firstHalf) {
-                    this->progressYZ_a=yuzde / this->threadsPerSurface;
-                } else {
-                    this->progressYZ_b=yuzde / this->threadsPerSurface;
+                switch(thr)
+                {
+                    case Multithread::a: this->progressYZ_a=yuzde / this->threadsPerSurface; break;
+                    case Multithread::b: this->progressYZ_b=yuzde / this->threadsPerSurface; break;
+                    case Multithread::c: this->progressYZ_c=yuzde / this->threadsPerSurface; break;
+                    case Multithread::d: this->progressYZ_d=yuzde / this->threadsPerSurface; break;
                 }
                 yuzdee=yuzde;
             }
@@ -228,10 +219,12 @@ void Foundation::III_hesapYZ(double x, double yy, double zz, bool firstHalf)
             gecici.x=ekranx;
             gecici.y=ekrany;
             gecici.r=renk;
-            if (firstHalf) {
-                this->hesapYZ_a.push_back(gecici);
-            } else {
-                this->hesapYZ_b.push_back(gecici);
+            switch(thr)
+            {
+                case Multithread::a: this->hesapYZ_a.push_back(gecici); break;
+                case Multithread::b: this->hesapYZ_b.push_back(gecici); break;
+                case Multithread::c: this->hesapYZ_c.push_back(gecici); break;
+                case Multithread::d: this->hesapYZ_d.push_back(gecici); break;
             }
             
             yy = yy + this->oran_ct;
@@ -269,16 +262,22 @@ void Foundation::IIIB_hesap()
     auto t1 = chrono::high_resolution_clock::now();
     
     //1.yuzey
-    thread th1a(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, true);
-    thread th1b(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, false);
+    thread th1a(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, Multithread::a);
+    thread th1b(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, Multithread::b);
+    thread th1c(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, Multithread::c);
+    thread th1d(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, Multithread::d);
     
     //2.yuzey
-    thread th2a(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, true);
-    thread th2b(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, false);
+    thread th2a(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, Multithread::a);
+    thread th2b(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, Multithread::b);
+    thread th2c(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, Multithread::c);
+    thread th2d(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, Multithread::d);
     
     //3.yuzey
-    thread th3a(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, true);
-    thread th3b(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, false);
+    thread th3a(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, Multithread::a);
+    thread th3b(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, Multithread::b);
+    thread th3c(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, Multithread::c);
+    thread th3d(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, Multithread::d);
     
     //printing
     thread th4(&Foundation::III_progressPrint, this);
@@ -289,21 +288,30 @@ void Foundation::IIIB_hesap()
 
     th1a.join();
     progressXY_a = completedPercentage;
-
     th1b.join();
     progressXY_b = completedPercentage;
+    th1c.join();
+    progressXY_c = completedPercentage;
+    th1d.join();
+    progressXY_d = completedPercentage;
     
     th2a.join();
     progressXZ_a = completedPercentage;
-
     th2b.join();
     progressXZ_b = completedPercentage;
+    th2c.join();
+    progressXZ_c = completedPercentage;
+    th2d.join();
+    progressXZ_d = completedPercentage;
     
     th3a.join();
     progressYZ_a = completedPercentage;
-    
     th3b.join();
     progressYZ_b = completedPercentage;
+    th3c.join();
+    progressYZ_c = completedPercentage;
+    th3d.join();
+    progressYZ_d = completedPercentage;
 
     this->III_calc_progressing = false;
     th4.join();
@@ -335,7 +343,18 @@ void Foundation::IIIB_hesap()
     {
         this->hesap.push_back(this->hesapXY_b[k]);
     }
+
+    for (int k=0; k!=this->hesapXY_c.size(); ++k)
+    {
+        this->hesap.push_back(this->hesapXY_c[k]);
+    }
+
+    for (int k=0; k!=this->hesapXY_d.size(); ++k)
+    {
+        this->hesap.push_back(this->hesapXY_d[k]);
+    }
     
+
     for (int k=0; k!=this->hesapXZ_a.size(); ++k)
     {
         this->hesap.push_back(this->hesapXZ_a[k]);
@@ -345,6 +364,17 @@ void Foundation::IIIB_hesap()
     {
         this->hesap.push_back(this->hesapXZ_b[k]);
     }
+
+    for (int k=0; k!=this->hesapXZ_c.size(); ++k)
+    {
+        this->hesap.push_back(this->hesapXZ_c[k]);
+    }
+
+    for (int k=0; k!=this->hesapXZ_d.size(); ++k)
+    {
+        this->hesap.push_back(this->hesapXZ_d[k]);
+    }
+    
     
     for (int k=0; k!=this->hesapYZ_a.size(); ++k)
     {
@@ -354,6 +384,16 @@ void Foundation::IIIB_hesap()
     for (int k=0; k!=this->hesapYZ_b.size(); ++k)
     {
         this->hesap.push_back(this->hesapYZ_b[k]);
+    }
+
+    for (int k=0; k!=this->hesapYZ_c.size(); ++k)
+    {
+        this->hesap.push_back(this->hesapYZ_c[k]);
+    }
+
+    for (int k=0; k!=this->hesapYZ_d.size(); ++k)
+    {
+        this->hesap.push_back(this->hesapYZ_d[k]);
     }
     
 }
