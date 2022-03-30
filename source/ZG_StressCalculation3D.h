@@ -43,8 +43,8 @@ void Foundation::III_hesapXY(double z, double xx, double yy, Multithread thr)
     
     const double aci=(3.141592654)/9;
     
-    int start = startValueFor3DCalc(thr) * ( this->Ly*this->oran_c + 1 );
-    int end = endValueFor3DCalc(thr) * ( this->Ly*this->oran_c + 1 );
+    int start = int(startValueFor3DCalc(thr) * ( this->Ly*this->oran_c + 1 ));
+    int end = int(endValueFor3DCalc(thr) * ( this->Ly*this->oran_c + 1 ));
     yy = yy + this->Ly * startValueFor3DCalc(thr);
 
     for (int j=start; j!=end; ++j)
@@ -58,8 +58,8 @@ void Foundation::III_hesapXY(double z, double xx, double yy, Multithread thr)
             //hesap kismi
             Qnokta=this->Stress(nokta, z);
             
-            ekranx=this->Ox + i*cos(aci) - j*cos(aci);
-            ekrany=this->Oy - j*sin(aci) - i*sin(aci);
+            ekranx=int(this->Ox + i*cos(aci) - j*cos(aci));
+            ekrany=int(this->Oy - j*sin(aci) - i*sin(aci));
             
             //completion percentage calculation
             yuzde= ( (j - start) * ( this->Lx*this->oran_c + 1 ) + i ) / ( (end - start + 1) * ( this->Lx*this->oran_c + 1 ) ) * 100.0;
@@ -113,8 +113,8 @@ void Foundation::III_hesapXZ(double y, double xx, double zz, Multithread thr)
     
     const double aci=(3.141592654)/9;
 
-    int start = startValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 );
-    int end = endValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 );
+    int start = int(startValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
+    int end = int(endValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
     zz = zz + this->Lz * startValueFor3DCalc(thr);
 
     for (int j=start; j!=end; ++j)
@@ -127,8 +127,8 @@ void Foundation::III_hesapXZ(double y, double xx, double zz, Multithread thr)
             //hesap kismi
             Qnokta=this->Stress(nokta, zz);
             
-            ekranx=this->Ox + i*cos(aci);
-            ekrany=this->Oy + j - i*sin(aci);
+            ekranx=int(this->Ox + i*cos(aci));
+            ekrany=int(this->Oy + j - i*sin(aci));
             
             //completion percentage calculation
             yuzde= ( (j - start) * ( this->Lx*this->oran_c + 1 ) + i ) / ( (end - start + 1) * ( this->Lx*this->oran_c + 1 ) ) * 100.0;
@@ -182,8 +182,8 @@ void Foundation::III_hesapYZ(double x, double yy, double zz, Multithread thr)
     
     const double aci=(3.141592654)/9;
 
-    int start = startValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 );
-    int end = endValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 );
+    int start = int(startValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
+    int end = int(endValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
     zz = zz + this->Lz * startValueFor3DCalc(thr);
 
     for (int j=start; j!=end; ++j)
@@ -196,8 +196,8 @@ void Foundation::III_hesapYZ(double x, double yy, double zz, Multithread thr)
             //hesap kismi
             Qnokta=this->Stress(nokta, zz);
             
-            ekranx=this->Ox - i*cos(aci);
-            ekrany=this->Oy + j - i*sin(aci);
+            ekranx=int(this->Ox - i*cos(aci));
+            ekrany=int(this->Oy + j - i*sin(aci));
             
             //completion percentage calculation
             yuzde= ( (j - start) * ( this->Ly*this->oran_c + 1 ) + i ) / ( (end - start + 1) * ( this->Ly*this->oran_c + 1 ) ) * 100.0;
@@ -426,49 +426,49 @@ void Foundation::IIIB_cizim()
     //sinir cizgileri rengi gri, 3 yuzeyi gostermek icin
     
     //arka sag sinir
-    c1=this->Ox + ( this->Lx*this->oran_c )*cos(aci);
-    c2=this->Oy - ( this->Lx*this->oran_c )*sin(aci);
-    c3=this->Ox + ( this->Lx*this->oran_c )*cos(aci) - ( this->Ly*this->oran_c )*cos(aci);
-    c4=this->Oy - ( this->Lx*this->oran_c )*sin(aci) - ( this->Ly*this->oran_c )*sin(aci);
+    c1=int(this->Ox + ( this->Lx*this->oran_c )*cos(aci));
+    c2=int(this->Oy - ( this->Lx*this->oran_c )*sin(aci));
+    c3=int(this->Ox + ( this->Lx*this->oran_c )*cos(aci) - ( this->Ly*this->oran_c )*cos(aci));
+    c4=int(this->Oy - ( this->Lx*this->oran_c )*sin(aci) - ( this->Ly*this->oran_c )*sin(aci));
     img.draw_line(c1,c2,c3,c4,gri,-1,1);
     
     //arka sol sinir
-    c1=this->Ox - ( this->Ly*this->oran_c )*cos(aci);
-    c2=this->Oy - ( this->Ly*this->oran_c )*sin(aci);
+    c1=int(this->Ox - ( this->Ly*this->oran_c )*cos(aci));
+    c2=int(this->Oy - ( this->Ly*this->oran_c )*sin(aci));
     img.draw_line(c1,c2,c3,c4,gri,-1,1);
     
     //kesi$ cizgileri
     //orta cizgi
-    c1=this->Ox;
-    c2=this->Oy;
-    c3=this->Ox;
-    c4=this->Oy + this->Lz*this->oran_c;
+    c1=int(this->Ox);
+    c2=int(this->Oy);
+    c3=int(this->Ox);
+    c4=int(this->Oy + this->Lz*this->oran_c);
     img.draw_line(c1,c2,c3,c4,gri,-1,1);
     
     //sag cizgi
-    c3=this->Ox - ( this->Ly*this->oran_c )*cos(aci);
-    c4=this->Oy - ( this->Ly*this->oran_c )*sin(aci);
+    c3=int(this->Ox - ( this->Ly*this->oran_c )*cos(aci));
+    c4=int(this->Oy - ( this->Ly*this->oran_c )*sin(aci));
     img.draw_line(c1,c2,c3,c4,gri,-1,1);
     
     int a=0;
     
     //her metrede bir cizgi
-    for (int i=0; i<=(this->Lz*this->oran_c); i+=this->oran_c)
+    for (int i=0; i<=int(this->Lz*this->oran_c); i+=int(this->oran_c))
     {
-        if (a==5) { img.draw_line(c1,c2+i,c3,c4+i,siyah,0.50); a=0;} else { img.draw_line(c1,c2+i,c3,c4+i,gri,0.35); }
+        if (a==5) { img.draw_line(c1,c2+i,c3,c4+i,siyah,0.50f); a=0;} else { img.draw_line(c1,c2+i,c3,c4+i,gri,0.35f); }
         ++a;
     }
     a=0;
     
     //sol cizgi
-    c3=this->Ox + ( this->Lx*this->oran_c )*cos(aci);
-    c4=this->Oy - ( this->Lx*this->oran_c )*sin(aci);
+    c3=int(this->Ox + ( this->Lx*this->oran_c )*cos(aci));
+    c4=int(this->Oy - ( this->Lx*this->oran_c )*sin(aci));
     img.draw_line(c1,c2,c3,c4,gri,-1,1);
     
     //her metrede bir cizgi
-    for (int i=0; i<=(this->Lz*this->oran_c); i+=this->oran_c)
+    for (int i=0; i<=int(this->Lz*this->oran_c); i+=int(this->oran_c))
     {
-        if (a==5) { img.draw_line(c1,c2+i,c3,c4+i,siyah,0.50); a=0;} else { img.draw_line(c1,c2+i,c3,c4+i,gri,0.35); }
+        if (a==5) { img.draw_line(c1,c2+i,c3,c4+i,siyah,0.50f); a=0;} else { img.draw_line(c1,c2+i,c3,c4+i,gri,0.35f); }
         ++a;
     }
     a=0;
@@ -488,8 +488,8 @@ void Foundation::IIIB_cizim()
     
     //cizim icin baslangic koordinatlari
     pixel AL, BL;
-    AL.x=(Lego - 20);  AL.y=B.x;
-    BL.x=(Lego - 10);  BL.y=B.x+20;
+    AL.x=int(Lego - 20);  AL.y=B.x;
+    BL.x=int(Lego - 10);  BL.y=B.x+20;
     
     for(int i=11; i!=0; --i)
     {

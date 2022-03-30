@@ -135,7 +135,7 @@ void sondaj_cizim()
     const double Lego=50;
     
     //eksenleri ciz
-    img.draw_line((Lego + B.y), B.x, (Lego + B.y), (B.x+zL),gri,-1,1);
+    img.draw_line(int(Lego + B.y), B.x, int(Lego + B.y), int(B.x+zL), gri, -1, 1);
     
     //grafik cizim
     //GRAFIK BASASAGI CIZILDIGI ICIN HESAPLANAN VE GIRILEN X VE YLER YER DEGISTI
@@ -143,8 +143,8 @@ void sondaj_cizim()
     int g1, g2;
     for(int i=0; i!=hesap_sdj.size(); ++i)
     {
-        g1=B.x + i;
-        g2=B.y - hesap_sdj[i]/(sondaj_Smax/SL);
+        g1=int(B.x + i);
+        g2=int(B.y - hesap_sdj[i]/(sondaj_Smax/SL));
         //S_maxdan buyuk yuzey gerilmesi icin ayar
         if(hesap_sdj[i]>sondaj_Smax){ g2 = B.y - SL;}
         
@@ -152,16 +152,16 @@ void sondaj_cizim()
         
         for(int j=g2; j!=B.y; ++j)
         {
-            img.draw_point((Lego + j), g1, renk.deger, 1);
+            img.draw_point(int(Lego + j), g1, renk.deger, 1);
         }
     }
     
     
     //z etiketi, z ekseni icin
-    img.draw_text((Lego + B.y), (B.x-18), "Z, meters", siyah, 0, 1, 13);
+    img.draw_text(int(Lego + B.y), int(B.x-18), "Z, meters", siyah, 0, 1, 13);
     
     //gerilme etiketi, gerilme ekseni icin
-    img.draw_text((Lego - 20), (B.x-18), "Stress, kPa", siyah, 0, 1, 13);
+    img.draw_text(int(Lego - 20), int(B.x-18), "Stress, kPa", siyah, 0, 1, 13);
     
     double zp=0;
     //z eksenini derecelendir
@@ -170,26 +170,26 @@ void sondaj_cizim()
         //cizgiyi at
         if(i!=B.x)
         { //ilk gri cizgiyi atmasin
-            img.draw_line((Lego + A.y), i, (Lego + B.y+5), i,gri,-1,1);
+            img.draw_line(int(Lego + A.y), i, int(Lego + B.y+5), i, gri, -1, 1);
         }
         
         //derinlik degerini yaz
-        img.draw_text((Lego + B.y+8), i-5, "%4.2f", siyah, 0, 1, 13, zp);
+        img.draw_text(int(Lego + B.y+8), i-5, "%4.2f", siyah, 0, 1, 13, zp);
         
         //gerilme degerini yaz
-        img.draw_text((Lego+8), i-5, "%4.2f", siyah, 0, 1, 13, hesap_sdj[i-B.x]);
+        img.draw_text(int(Lego+8), i-5, "%4.2f", siyah, 0, 1, 13, hesap_sdj[i-B.x]);
         
         zp+=sondaj_z/20;
     }
     
     //ust taraftan cizgi cek
-    img.draw_line((Lego + A.y),A.x,(Lego + A.y),(B.x+zL),gri,-1,1);
+    img.draw_line(int(Lego + A.y), A.x, int(Lego + A.y), int(B.x+zL), gri, -1, 1);
     
     //maksimum gerilme miktari ve yerini yaz
-    img.draw_text((Lego + 50), (A.x + zL + 20), "%4.2f kPa of Maximum Stress occured at %4.2f meters depth.", kirmizi,0 , 1, 13, sondaj_Smax,sondaj_zmax);
+    img.draw_text(int(Lego + 50), int(A.x + zL + 20), "%4.2f kPa of Maximum Stress occured at %4.2f meters depth.", kirmizi,0 , 1, 13, sondaj_Smax,sondaj_zmax);
     
     //sondaj koordinatini belirt
-    img.draw_text((Lego + 50), (A.x + zL + 30), "Coordinates of Boring are X= %4.2f meter and Y= %4.2f meter.", kirmizi, 0, 1, 13, sondaj_nokta.x,sondaj_nokta.y);
+    img.draw_text(int(Lego + 50), int(A.x + zL + 30), "Coordinates of Boring are X= %4.2f meter and Y= %4.2f meter.", kirmizi, 0, 1, 13, sondaj_nokta.x,sondaj_nokta.y);
     
     //legend ciz
     //legend(sondaj_Smax); yerine..
@@ -198,8 +198,8 @@ void sondaj_cizim()
     
     //cizim icin baslangic koordinatlari
     pixel AL, BL;
-    AL.x=(Lego - 20);  AL.y=B.x;
-    BL.x=(Lego - 10);  BL.y=B.x+20;
+    AL.x=int(Lego - 20);  AL.y=B.x;
+    BL.x=int(Lego - 10);  BL.y=B.x+20;
     
     for(int i=11; i!=0; --i)
     {
@@ -232,9 +232,9 @@ void sondaj_cizim()
         {
             int i = disp.mouse_y() - B.x;
             double derinlik = (i * sondaj_z / zL);
-            img.draw_rectangle((Lego + 100),(B.x-18),B.y,(B.x-5),beyaz);
+            img.draw_rectangle(int(Lego + 100), (B.x-18), B.y, (B.x-5), beyaz);
             //cout << derinlik << " " << hesap_sdj[i] << "\n";
-            img.draw_text((Lego + 100),(B.x-18), "| Depth: %4.2f meters , Stress increment %4.2f kPa |", kirmizi, 0, 1, 13, derinlik, hesap_sdj[i]);
+            img.draw_text(int(Lego + 100), (B.x-18), "| Depth: %4.2f meters , Stress increment %4.2f kPa |", kirmizi, 0, 1, 13, derinlik, hesap_sdj[i]);
         }
         
         //goruntuyu ciz
