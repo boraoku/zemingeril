@@ -27,6 +27,8 @@ char* formatDouble(double value) {
     return say;
 }
 
+enum IIIDsurface { xy, xz, yz };
+
 enum Multithread { a, b, c, d };
 
 double startValueFor3DCalc(Multithread thr)

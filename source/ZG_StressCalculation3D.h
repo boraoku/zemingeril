@@ -30,7 +30,7 @@ void Foundation::III_progressPrint()
     cout << "\nCalculation finished";
 }
 
-void Foundation::III_hesapXY(double z, double xx, double yy, Multithread thr)
+void Foundation::III_calculate(IIIDsurface surface, double xx, double yy, double zz, Multithread thr)
 {
     coordinate nokta;
     double Qnokta=0;
@@ -42,104 +42,97 @@ void Foundation::III_hesapXY(double z, double xx, double yy, Multithread thr)
     pixel gecici;
     
     const double aci=(3.141592654)/9;
-    
-    int start = int(startValueFor3DCalc(thr) * ( this->Ly*this->oran_c + 1 ));
-    int end = int(endValueFor3DCalc(thr) * ( this->Ly*this->oran_c + 1 ));
-    yy = yy + this->Ly * startValueFor3DCalc(thr);
+
+    int start, end, selectedL;
+
+    switch(surface)
+    {
+        case IIIDsurface::xy: 
+            start = int(startValueFor3DCalc(thr) * ( this->Ly*this->oran_c + 1 ));
+            end = int(endValueFor3DCalc(thr) * ( this->Ly*this->oran_c + 1 ));
+            yy = yy + this->Ly * startValueFor3DCalc(thr);
+            selectedL = this->Lx; 
+            break;
+        
+        case IIIDsurface::xz: 
+            start = int(startValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
+            end = int(endValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
+            zz = zz + this->Lz * startValueFor3DCalc(thr);
+            selectedL = this->Lx; 
+            break;
+        
+        case IIIDsurface::yz: 
+            start = int(startValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
+            end = int(endValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
+            zz = zz + this->Lz * startValueFor3DCalc(thr);
+            selectedL = this->Ly; 
+            break;
+    }
 
     for (int j=start; j!=end; ++j)
     {
 
-        for (int i=0; i!=( this->Lx*this->oran_c + 1 ); ++i)
+        for (int i=0; i!=( selectedL*this->oran_c + 1 ); ++i)
         {
             nokta.x=xx;
             nokta.y=yy;
-            
-            //hesap kismi
-            Qnokta=this->Stress(nokta, z);
-            
-            ekranx=int(this->Ox + i*cos(aci) - j*cos(aci));
-            ekrany=int(this->Oy - j*sin(aci) - i*sin(aci));
-            
-            //completion percentage calculation
-            yuzde= ( (j - start) * ( this->Lx*this->oran_c + 1 ) + i ) / ( (end - start + 1) * ( this->Lx*this->oran_c + 1 ) ) * 100.0;
-            if (yuzde < 0 ) { yuzde=0; }
-            if (yuzde > (yuzdee) ) {
-                switch(thr)
-                {
-                    case Multithread::a: this->progressXY_a=yuzde / this->threadsPerSurface; break;
-                    case Multithread::b: this->progressXY_b=yuzde / this->threadsPerSurface; break;
-                    case Multithread::c: this->progressXY_c=yuzde / this->threadsPerSurface; break;
-                    case Multithread::d: this->progressXY_d=yuzde / this->threadsPerSurface; break;
-                }
-                yuzdee=yuzde;
-            }
-            
-            //etki faktorlerini renklerle ifade et
-            renk=color_calc(Qnokta,this->QQ);
-            
-            gecici.x=ekranx;
-            gecici.y=ekrany;
-            gecici.r=renk;
-            switch(thr)
-            {
-                case Multithread::a: this->hesapXY_a.push_back(gecici); break;
-                case Multithread::b: this->hesapXY_b.push_back(gecici); break;
-                case Multithread::c: this->hesapXY_c.push_back(gecici); break;
-                case Multithread::d: this->hesapXY_d.push_back(gecici); break;
-            }
-            
-            xx = xx + this->oran_ct;
-            
-        }
-        
-        xx = this->Ax;
-        yy = yy + this->oran_ct;
-    }
-}
 
-void Foundation::III_hesapXZ(double y, double xx, double zz, Multithread thr)
-{
-    coordinate nokta;
-    double Qnokta=0;
-    int ekranx, ekrany;
-    color_RGB renk;
-    double yuzde, yuzdee;
-    yuzde=0;
-    yuzdee=0;
-    pixel gecici;
-    
-    nokta.y=y;
-    
-    const double aci=(3.141592654)/9;
-
-    int start = int(startValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
-    int end = int(endValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
-    zz = zz + this->Lz * startValueFor3DCalc(thr);
-
-    for (int j=start; j!=end; ++j)
-    {
-
-        for (int i=0; i!=( this->Lx*this->oran_c + 1); ++i)
-        {
-            nokta.x=xx;
-            
             //hesap kismi
             Qnokta=this->Stress(nokta, zz);
             
-            ekranx=int(this->Ox + i*cos(aci));
-            ekrany=int(this->Oy + j - i*sin(aci));
+            switch(surface)
+            {
+                case IIIDsurface::xy: 
+                    ekranx=int(this->Ox + i*cos(aci) - j*cos(aci));
+                    ekrany=int(this->Oy - j*sin(aci) - i*sin(aci));
+                    break;
+                
+                case IIIDsurface::xz: 
+                    ekranx=int(this->Ox + i*cos(aci));
+                    ekrany=int(this->Oy + j - i*sin(aci));
+                    break;
+                
+                case IIIDsurface::yz: 
+                    ekranx=int(this->Ox - i*cos(aci));
+                    ekrany=int(this->Oy + j - i*sin(aci));
+                    break;
+            }
             
             //completion percentage calculation
-            yuzde= ( (j - start) * ( this->Lx*this->oran_c + 1 ) + i ) / ( (end - start + 1) * ( this->Lx*this->oran_c + 1 ) ) * 100.0;
+            yuzde= ( (j - start) * ( selectedL*this->oran_c + 1 ) + i ) / ( (end - start + 1) * ( selectedL*this->oran_c + 1 ) ) * 100.0;
             if (yuzde < 0 ) { yuzde=0; }
             if (yuzde > yuzdee) {
-                switch(thr)
+                switch(surface)
                 {
-                    case Multithread::a: this->progressXZ_a=yuzde / this->threadsPerSurface; break;
-                    case Multithread::b: this->progressXZ_b=yuzde / this->threadsPerSurface; break;
-                    case Multithread::c: this->progressXZ_c=yuzde / this->threadsPerSurface; break;
-                    case Multithread::d: this->progressXZ_d=yuzde / this->threadsPerSurface; break;
+                    case IIIDsurface::xy: 
+                        switch(thr)
+                        {
+                            case Multithread::a: this->progressXY_a=yuzde / this->threadsPerSurface; break;
+                            case Multithread::b: this->progressXY_b=yuzde / this->threadsPerSurface; break;
+                            case Multithread::c: this->progressXY_c=yuzde / this->threadsPerSurface; break;
+                            case Multithread::d: this->progressXY_d=yuzde / this->threadsPerSurface; break;
+                        }
+                        break;
+                    
+                    case IIIDsurface::xz: 
+                        switch(thr)
+                        {
+                            case Multithread::a: this->progressXZ_a=yuzde / this->threadsPerSurface; break;
+                            case Multithread::b: this->progressXZ_b=yuzde / this->threadsPerSurface; break;
+                            case Multithread::c: this->progressXZ_c=yuzde / this->threadsPerSurface; break;
+                            case Multithread::d: this->progressXZ_d=yuzde / this->threadsPerSurface; break;
+                        }
+                        break;
+                    
+                    case IIIDsurface::yz: 
+                        switch(thr)
+                        {
+                            case Multithread::a: this->progressYZ_a=yuzde / this->threadsPerSurface; break;
+                            case Multithread::b: this->progressYZ_b=yuzde / this->threadsPerSurface; break;
+                            case Multithread::c: this->progressYZ_c=yuzde / this->threadsPerSurface; break;
+                            case Multithread::d: this->progressYZ_d=yuzde / this->threadsPerSurface; break;
+                        }
+                        break;
                 }
                 yuzdee=yuzde;
             }
@@ -150,89 +143,65 @@ void Foundation::III_hesapXZ(double y, double xx, double zz, Multithread thr)
             gecici.x=ekranx;
             gecici.y=ekrany;
             gecici.r=renk;
-            switch(thr)
+
+            switch(surface)
             {
-                case Multithread::a: this->hesapXZ_a.push_back(gecici); break;
-                case Multithread::b: this->hesapXZ_b.push_back(gecici); break;
-                case Multithread::c: this->hesapXZ_c.push_back(gecici); break;
-                case Multithread::d: this->hesapXZ_d.push_back(gecici); break;
+                case IIIDsurface::xy: 
+                    switch(thr)
+                    {
+                        case Multithread::a: this->hesapXY_a.push_back(gecici); break;
+                        case Multithread::b: this->hesapXY_b.push_back(gecici); break;
+                        case Multithread::c: this->hesapXY_c.push_back(gecici); break;
+                        case Multithread::d: this->hesapXY_d.push_back(gecici); break;
+                    }
+                    
+                    xx = xx + this->oran_ct;
+                    break;
+                
+                case IIIDsurface::xz: 
+                    switch(thr)
+                    {
+                        case Multithread::a: this->hesapXZ_a.push_back(gecici); break;
+                        case Multithread::b: this->hesapXZ_b.push_back(gecici); break;
+                        case Multithread::c: this->hesapXZ_c.push_back(gecici); break;
+                        case Multithread::d: this->hesapXZ_d.push_back(gecici); break;
+                    }
+                    
+                    xx = xx + this->oran_ct;
+                    break;
+                
+                case IIIDsurface::yz: 
+                    switch(thr)
+                    {
+                        case Multithread::a: this->hesapYZ_a.push_back(gecici); break;
+                        case Multithread::b: this->hesapYZ_b.push_back(gecici); break;
+                        case Multithread::c: this->hesapYZ_c.push_back(gecici); break;
+                        case Multithread::d: this->hesapYZ_d.push_back(gecici); break;
+                    }
+                    
+                    yy = yy + this->oran_ct;
+                    break;
             }
             
-            xx = xx + this->oran_ct;
-            
         }
-        
-        xx = this->Ax;
-        zz = zz + this->oran_ct;
-    }
-}
 
-void Foundation::III_hesapYZ(double x, double yy, double zz, Multithread thr)
-{
-    coordinate nokta;
-    double Qnokta=0;
-    int ekranx, ekrany;
-    color_RGB renk;
-    double yuzde, yuzdee;
-    yuzde=0.0;
-    yuzdee=0.0;
-    pixel gecici;
-    
-    nokta.x=x;
-    
-    const double aci=(3.141592654)/9;
-
-    int start = int(startValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
-    int end = int(endValueFor3DCalc(thr) * ( this->Lz*this->oran_c + 1 ));
-    zz = zz + this->Lz * startValueFor3DCalc(thr);
-
-    for (int j=start; j!=end; ++j)
-    {
-
-        for (int i=0; i!=( this->Ly*this->oran_c + 1); ++i)
+        switch(surface)
         {
-            nokta.y=yy;
+            case IIIDsurface::xy: 
+                xx = this->Ax;
+                yy = yy + this->oran_ct;
+                break;
             
-            //hesap kismi
-            Qnokta=this->Stress(nokta, zz);
-            
-            ekranx=int(this->Ox - i*cos(aci));
-            ekrany=int(this->Oy + j - i*sin(aci));
-            
-            //completion percentage calculation
-            yuzde= ( (j - start) * ( this->Ly*this->oran_c + 1 ) + i ) / ( (end - start + 1) * ( this->Ly*this->oran_c + 1 ) ) * 100.0;
-            if (yuzde < 0 ) { yuzde=0; }
-            if (yuzde > yuzdee) {
-                switch(thr)
-                {
-                    case Multithread::a: this->progressYZ_a=yuzde / this->threadsPerSurface; break;
-                    case Multithread::b: this->progressYZ_b=yuzde / this->threadsPerSurface; break;
-                    case Multithread::c: this->progressYZ_c=yuzde / this->threadsPerSurface; break;
-                    case Multithread::d: this->progressYZ_d=yuzde / this->threadsPerSurface; break;
-                }
-                yuzdee=yuzde;
-            }
-            
-            //etki faktorlerini renklerle ifade et
-            renk=color_calc(Qnokta,this->QQ);
-            
-            gecici.x=ekranx;
-            gecici.y=ekrany;
-            gecici.r=renk;
-            switch(thr)
-            {
-                case Multithread::a: this->hesapYZ_a.push_back(gecici); break;
-                case Multithread::b: this->hesapYZ_b.push_back(gecici); break;
-                case Multithread::c: this->hesapYZ_c.push_back(gecici); break;
-                case Multithread::d: this->hesapYZ_d.push_back(gecici); break;
-            }
-            
-            yy = yy + this->oran_ct;
-            
+            case IIIDsurface::xz: 
+                xx = this->Ax;
+                zz = zz + this->oran_ct;
+                break;
+
+            case IIIDsurface::yz: 
+                yy = this->Ay;
+                zz = zz + this->oran_ct;
+                break;
         }
-        
-        yy = this->Ay;
-        zz = zz + this->oran_ct;
     }
 }
 
@@ -262,23 +231,23 @@ void Foundation::IIIB_hesap()
     auto t1 = chrono::high_resolution_clock::now();
     
     //1.yuzey
-    thread th1a(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, Multithread::a);
-    thread th1b(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, Multithread::b);
-    thread th1c(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, Multithread::c);
-    thread th1d(&Foundation::III_hesapXY, this, this->Az, this->Ax, this->Ay, Multithread::d);
+    thread th1a(&Foundation::III_calculate, this, IIIDsurface::xy, this->Ax, this->Ay, this->Az, Multithread::a);
+    thread th1b(&Foundation::III_calculate, this, IIIDsurface::xy, this->Ax, this->Ay, this->Az, Multithread::b);
+    thread th1c(&Foundation::III_calculate, this, IIIDsurface::xy, this->Ax, this->Ay, this->Az, Multithread::c);
+    thread th1d(&Foundation::III_calculate, this, IIIDsurface::xy, this->Ax, this->Ay, this->Az, Multithread::d);
     
     //2.yuzey
-    thread th2a(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, Multithread::a);
-    thread th2b(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, Multithread::b);
-    thread th2c(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, Multithread::c);
-    thread th2d(&Foundation::III_hesapXZ, this, this->Ay, this->Ax, this->Az, Multithread::d);
-    
+    thread th2a(&Foundation::III_calculate, this, IIIDsurface::xz, this->Ax, this->Ay, this->Az, Multithread::a);
+    thread th2b(&Foundation::III_calculate, this, IIIDsurface::xz, this->Ax, this->Ay, this->Az, Multithread::b);
+    thread th2c(&Foundation::III_calculate, this, IIIDsurface::xz, this->Ax, this->Ay, this->Az, Multithread::c);
+    thread th2d(&Foundation::III_calculate, this, IIIDsurface::xz, this->Ax, this->Ay, this->Az, Multithread::d);
+
     //3.yuzey
-    thread th3a(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, Multithread::a);
-    thread th3b(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, Multithread::b);
-    thread th3c(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, Multithread::c);
-    thread th3d(&Foundation::III_hesapYZ, this, this->Ax, this->Ay, this->Az, Multithread::d);
-    
+    thread th3a(&Foundation::III_calculate, this, IIIDsurface::yz, this->Ax, this->Ay, this->Az, Multithread::a);
+    thread th3b(&Foundation::III_calculate, this, IIIDsurface::yz, this->Ax, this->Ay, this->Az, Multithread::b);
+    thread th3c(&Foundation::III_calculate, this, IIIDsurface::yz, this->Ax, this->Ay, this->Az, Multithread::c);
+    thread th3d(&Foundation::III_calculate, this, IIIDsurface::yz, this->Ax, this->Ay, this->Az, Multithread::d);
+
     //printing
     thread th4(&Foundation::III_progressPrint, this);
     

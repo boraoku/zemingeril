@@ -69,9 +69,7 @@ namespace ZEMiNGERiL
         bool III_calc_progressing=true;
 
         void III_progressPrint();
-        void III_hesapXY(double z, double xx, double yy, Multithread thr);
-        void III_hesapXZ(double y, double xx, double zz, Multithread thr);
-        void III_hesapYZ(double x, double yy, double zz, Multithread thr);
+        void III_calculate(IIIDsurface surface, double xx, double yy, double zz, Multithread thr);
     };
 
     // Define Type and Dimensions of Elements of Foundation
