@@ -18,7 +18,9 @@ make
 
 And then run the compiled code:
 ```bash
-./zg
+cd .. # go back to top directory
+cd build
+./ZeminGeril
 ```
 
 For Windows, just use the provided VS file `ZeminGeril.sln` to compile. 
