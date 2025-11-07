@@ -1,6 +1,16 @@
 # ZeminGeril
 
-A C++ programme by Bora Okumusoglu as part of his Masters Degree thesis entitled [Stress distribution and elasto plastic settlements under shallow foundations](https://tez.yok.gov.tr/UlusalTezMerkezi/TezGoster?key=-Z0vbSUgrhM9fXoGkRe6Q8zJ7Sk7W31SHEFOFRvy43ZoScM4g3rcZCg_NG_0hva7).
+![Screenshot](ZeminGeril.jpg)
+
+A ground engineering software developed by Bora Okumusoglu for estimating stress distribution in the semi-infinite solid body (the ground) resulting from surface loads. The software was initially programmed in 2005–2006 as part of his Master's thesis titled [Stress distribution and elasto plastic settlements under shallow foundations](https://tez.yok.gov.tr/UlusalTezMerkezi/TezGoster?key=-Z0vbSUgrhM9fXoGkRe6Q8zJ7Sk7W31SHEFOFRvy43ZoScM4g3rcZCg_NG_0hva7).
+
+### Recent Improvement
+
+* Multihreading for greatly faster calculations starting at [Commit 822fe44](https://github.com/boraoku/zemingeril/commit/822fe445ded25017b4b9a449a1ac9d50ac1fadff).
+
+* Code refactoring to ease future work like [Commit 2d8403f](https://github.com/boraoku/zemingeril/commit/2d8403fe3239167caf37af1489af84eb7b7a6c4a).
+
+* Ready-to-use executable files (binaries) for all (Windows, Linux and Mac) PC platforms as listed under [Releases](https://github.com/boraoku/zemingeril/releases).
 
 ### Requirements
 
