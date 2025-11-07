@@ -243,6 +243,28 @@ void sondaj_cizim()
     }
 }
 
+int showPostGraphMenu()
+{
+    cout << "\n\n";
+    cout << "==================================\n";
+    cout << "   What would you like to do?    \n";
+    cout << "==================================\n";
+    cout << "[1] Create a new graph\n";
+    cout << "[2] Exit\n";
+    cout << "\nYour choice (1-2): ";
+
+    int choice;
+    cin >> choice;
+
+    // Input validation
+    while (choice != 1 && choice != 2) {
+        cout << "\nInvalid choice. Please enter 1 or 2: ";
+        cin >> choice;
+    }
+
+    return choice;
+}
+
 int main( int argc, char **argv )
 {
 #ifdef _WIN32
@@ -259,37 +281,58 @@ int main( int argc, char **argv )
     
     //temelin girilmesi
     ZG.Input();
-    
-    cout << "\n-------------------------------------------------------------\n";
-    
-    cout << "\nWhat kind of graphing would you like to have?\n\n";
-    //    cout << "[0] 2D cross-section view of stress distribution\n\n";
-    //    cout << "[1] 2D graph of stress distribution through a line\n inside the soil at a certain depth\n\n";
-    cout << "[0] 2D graph of stress distribution through a line of boring\n\n";
-    cout << "[1] 3D cross-section view of stress distribution\n\n(0-1):";
-    int option;
-    cin >> option;
-    
-    cout << "\n-------------------------------------------------------------\n";
-    
-    
-    if (option==1)
-    {
-        //IIIB grafik hesap ve cizim
-        ZG.IIIB_hesap();
-        ZG.IIIB_cizim();
-    } else if (option==0) {
-        //2boyut hesap ve cizim
-        sondaj_hesap();
-        sondaj_cizim();
+
+    bool continueGraphing = true;
+
+    while (continueGraphing) {
+        cout << "\n-------------------------------------------------------------\n";
+
+        cout << "\nWhat kind of graphing would you like to have?\n\n";
+        //    cout << "[0] 2D cross-section view of stress distribution\n\n";
+        //    cout << "[1] 2D graph of stress distribution through a line\n inside the soil at a certain depth\n\n";
+        cout << "[0] 2D graph of stress distribution through a line of boring\n\n";
+        cout << "[1] 3D cross-section view of stress distribution\n\n(0-1):";
+        int option;
+        cin >> option;
+
+        // Validate input
+        while (option != 0 && option != 1) {
+            cout << "\nInvalid option. Please enter 0 or 1: ";
+            cin >> option;
+        }
+
+        cout << "\n-------------------------------------------------------------\n";
+
+
+        if (option==1)
+        {
+            //IIIB grafik hesap ve cizim
+            ZG.IIIB_hesap();
+            ZG.IIIB_cizim();
+        } else if (option==0) {
+            //2boyut hesap ve cizim
+            sondaj_hesap();
+            sondaj_cizim();
+        }
+
+        // Show post-graphing menu
+        int userChoice = showPostGraphMenu();
+
+        if (userChoice == 2) {
+            continueGraphing = false;  // Exit the loop
+        }
+        // If userChoice == 1, loop continues and shows graphing menu again
     }
-    
+
+    // Final exit message
+    cout << "\n\nThank you for using ZeminGeril-Temel!\n\n";
+
 #ifdef _WIN32
     //windows
     system("pause");
 #else
     //linux or mac
-    system("echo 'Press ENTER to continue . . .'");
+    system("echo 'Press ENTER to exit . . .'");
     cin.ignore();
     cin.ignore();
 #endif
